@@ -5,18 +5,19 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
 public class Ferme {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     private String nom;
     private String localisation;
     private Double superficie;
-    private LocalDateTime date_de_creation;
+    private LocalDateTime date_de_creation = LocalDateTime.now();
 
 //    @OneToMany
 //    List<Champ> champs;

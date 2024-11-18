@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1731943479348-3
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropSequence:
+            sequenceName: champ_seq
+  - changeSet:
+      id: 1731943479348-1
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropColumn:
+            columnName: id
+            tableName: champ
+  - changeSet:
+      id: 1731943479348-2
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_champ
+                    validateNullable: true
+                  name: id
+                  type: UUID
+            tableName: champ
+
