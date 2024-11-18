@@ -20,6 +20,4 @@
 //    private Champ champ;
 //    private Double productivité;
 //
-//    @OneToMany
-//    List<RecoltesDetails> recoltesDetails;
 //}
