@@ -1,5 +1,6 @@
 package com.example.citronix.service.impl;
 
+import com.example.citronix.domain.Champ;
 import com.example.citronix.domain.Ferme;
 import com.example.citronix.mapper.FermeMapper;
 import com.example.citronix.repository.FermeRepository;
@@ -75,5 +76,17 @@ public class FermeServiceImpl implements FermeService {
         Ferme ferme = fermeOptional.get();
         fermeRepository.delete(ferme);
     }
+
+
+    public List<Ferme> getFieldsGraterThan() {
+        List<Ferme> fermeList = findAll();
+
+        return fermeList.stream()
+                .filter(ferme -> ferme.getChamps().stream()
+                        .mapToDouble(Champ::getSuperficie)
+                        .sum() < 4000)
+                .toList();
+    }
+
 
 }

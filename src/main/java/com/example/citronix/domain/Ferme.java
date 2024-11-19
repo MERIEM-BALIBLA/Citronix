@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -19,6 +20,6 @@ public class Ferme {
     private Double superficie;
     private LocalDateTime date_de_creation = LocalDateTime.now();
 
-//    @OneToMany
-//    List<Champ> champs;
+    @OneToMany
+    List<Champ> champs;
 }

@@ -1,5 +1,6 @@
 package com.example.citronix.web.VM;
 
+import com.example.citronix.service.DTO.ChampDTO;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -7,6 +8,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,4 +29,8 @@ public class FermeVM {
     private Double superficie;
 
     private LocalDateTime date_de_creation = LocalDateTime.now();
+
+    //    -------------------------------------------------------
+    private List<ChampVM> champVMList;
+
 }

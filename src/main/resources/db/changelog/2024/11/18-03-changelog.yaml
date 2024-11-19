@@ -1,0 +1,89 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1731962157541-1
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_arbre
+                  name: id
+                  type: UUID
+              - column:
+                  name: date_de_plantation
+                  type: DATETIME
+              - column:
+                  name: age
+                  type: SMALLINT
+              - column:
+                  name: champ_id
+                  type: UUID
+              - column:
+                  name: productivite_annuelle
+                  type: DOUBLE
+            tableName: arbre
+  - changeSet:
+      id: 1731962157541-2
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                  name: ferme_id
+                  type: UUID
+              - column:
+                  constraints:
+                    nullable: false
+                  name: champs_id
+                  type: UUID
+            tableName: ferme_champs
+  - changeSet:
+      id: 1731962157541-3
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addUniqueConstraint:
+            columnNames: champs_id
+            constraintName: uc_ferme_champs_champs
+            tableName: ferme_champs
+  - changeSet:
+      id: 1731962157541-4
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: champ_id
+            baseTableName: arbre
+            constraintName: FK_ARBRE_ON_CHAMP
+            referencedColumnNames: id
+            referencedTableName: champ
+  - changeSet:
+      id: 1731962157541-5
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: champs_id
+            baseTableName: ferme_champs
+            constraintName: fk_fercha_on_champ
+            referencedColumnNames: id
+            referencedTableName: champ
+  - changeSet:
+      id: 1731962157541-6
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: ferme_id
+            baseTableName: ferme_champs
+            constraintName: fk_fercha_on_ferme
+            referencedColumnNames: id
+            referencedTableName: ferme
+

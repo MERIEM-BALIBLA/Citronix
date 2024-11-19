@@ -26,5 +26,9 @@ public class GlobalException {
         return ex.getMessage();
     }
 
+    @ExceptionHandler(ChampAlreadyExistsException.class)
+    public String champAlreadyExistsException(ChampAlreadyExistsException ex) {
+        return ex.getMessage();
+    }
 
 }

@@ -11,7 +11,7 @@ import java.util.UUID;
 @Setter
 public class Champ {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @ManyToOne
