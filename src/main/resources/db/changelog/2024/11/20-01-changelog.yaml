@@ -1,0 +1,47 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1732112274285-1
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_vente
+                  name: id
+                  type: UUID
+              - column:
+                  name: date_de_vente
+                  type: DATETIME
+              - column:
+                  name: prix_unitaire
+                  type: DOUBLE
+              - column:
+                  name: recolte_id
+                  type: UUID
+              - column:
+                  name: client_name
+                  type: VARCHAR(255)
+            tableName: vente
+  - changeSet:
+      id: 1732112274285-2
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: recolte_id
+            baseTableName: vente
+            constraintName: FK_VENTE_ON_RECOLTE
+            referencedColumnNames: id
+            referencedTableName: recolte
+  - changeSet:
+      id: 1732112274285-3
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropSequence:
+            sequenceName: vente_seq
+

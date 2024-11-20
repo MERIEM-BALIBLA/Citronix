@@ -8,6 +8,5 @@ import java.util.UUID;
 
 public interface FermeRepository extends JpaRepository<Ferme, UUID> {
     Optional<Ferme> findByNom(String nom);
-
     Optional<Ferme> findById(UUID id);
 }

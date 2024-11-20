@@ -4,6 +4,8 @@ import com.example.citronix.domain.Arbre;
 import com.example.citronix.mapper.ArbreMapper;
 import com.example.citronix.repository.ArbreRepository;
 import com.example.citronix.service.DTO.ArbreDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -19,5 +21,7 @@ public interface ArbreService {
     ArbreDTO update(UUID id, ArbreDTO arbreDTO);
 
     void delete(UUID id);
+
+    Page<Arbre> findAll(Pageable pageable);
 }
 

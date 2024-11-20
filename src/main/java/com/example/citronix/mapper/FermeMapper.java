@@ -18,19 +18,19 @@ public interface FermeMapper {
     Ferme toEntity(FermeDTO fermeDTO);
 
     // Map Entity to VM (for display purposes)
-    @Mapping(target = "nom", source = "nom")
-    @Mapping(target = "localisation", source = "localisation")
-    @Mapping(target = "superficie", source = "superficie")
-    @Mapping(target = "date_de_creation", source = "date_de_creation")
+//    @Mapping(target = "nom", source = "nom")
+//    @Mapping(target = "localisation", source = "localisation")
+//    @Mapping(target = "superficie", source = "superficie")
+//    @Mapping(target = "date_de_creation", source = "date_de_creation")
     FermeVM toVM(Ferme ferme);
 
     List<FermeVM> toVMs(List<Ferme> fermes);
 
     // Map VM to Entity (for saving or updating)
-    @Mapping(target = "nom", source = "nom")
-    @Mapping(target = "localisation", source = "localisation")
-    @Mapping(target = "superficie", source = "superficie")
-    @Mapping(target = "date_de_creation", expression = "java(java.time.LocalDateTime.now())")
+//    @Mapping(target = "nom", source = "nom")
+//    @Mapping(target = "localisation", source = "localisation")
+//    @Mapping(target = "superficie", source = "superficie")
+//    @Mapping(target = "date_de_creation", source = "date_de_creation")
     // Set creation date
     Ferme toEntity(FermeVM fermeVM);
 }

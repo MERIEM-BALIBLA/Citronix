@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ChampRepository extends JpaRepository<Champ, UUID> {
-    Optional<Champ> existsByNom(String nom);
+    Optional<Champ> findByNom(String nom);
     Optional<Champ> findById(UUID id);
 
     int countByFerme(Ferme ferme);

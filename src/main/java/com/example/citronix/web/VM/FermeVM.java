@@ -1,11 +1,9 @@
 package com.example.citronix.web.VM;
 
 import com.example.citronix.service.DTO.ChampDTO;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -25,10 +23,13 @@ public class FermeVM {
 
     @NotNull(message = "le superficie de la ferme ne doit pas etre null")
     @Min(value = 100, message = "la superficie doit être supérieure à 100")
-    @Max(value = 10000, message = "la superficie doit être supérieure à zéro")
+    @Max(value = 100000, message = "la superficie doit être supérieure à zéro")
+    @Positive(message = "La valeur du superficie doit ete positive ")
     private Double superficie;
 
-    private LocalDateTime date_de_creation = LocalDateTime.now();
+    @NotNull(message = "La date de création de la ferme ne doit pas être null")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime date_de_creation;
 
     //    -------------------------------------------------------
 //    private List<ChampVM> champVMList;

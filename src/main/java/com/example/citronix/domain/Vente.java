@@ -1,20 +1,24 @@
-//package com.example.citronix.domain;
-//
-//import jakarta.persistence.*;
-//
-//import java.time.LocalDateTime;
-//
-//@Entity
-//public class Vente {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-//    private Long id;
-//
-//    private LocalDateTime date;
-//    private Double prix_unitaire;
-//    @ManyToOne
-//    private Recolte recolte;
-//    private String clientName;
-//    private Double revenu;
-//
-//}
+package com.example.citronix.domain;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+public class Vente {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    private LocalDateTime date_de_vente;
+    private Double prix_unitaire;
+    @OneToOne
+    private Recolte recolte;
+    private String clientName;
+
+}

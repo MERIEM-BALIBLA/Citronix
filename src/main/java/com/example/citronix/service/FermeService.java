@@ -20,4 +20,10 @@ public interface FermeService {
     FermeDTO update(UUID id, FermeDTO fermeDTO);
 
     void delete(UUID id);
+
+    List<Ferme> getFieldsGraterThan();
+
+    boolean verifierSuperficieDeFerme(Ferme ferme);
+
+    Ferme getFermeDatails(String nom);
 }

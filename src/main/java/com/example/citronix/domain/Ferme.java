@@ -18,8 +18,8 @@ public class Ferme {
     private String nom;
     private String localisation;
     private Double superficie;
-    private LocalDateTime date_de_creation = LocalDateTime.now();
+    private LocalDateTime date_de_creation;
 
-    @OneToMany
+    @OneToMany(mappedBy = "ferme")
     List<Champ> champs;
 }

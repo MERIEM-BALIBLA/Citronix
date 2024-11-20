@@ -16,17 +16,14 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/ferme")
 public class FermeController {
+
     @Autowired
     private FermeService fermeService;
     @Autowired
     private FermeMapper fermeMapper;
 
-//    public FermeController(FermeMapper fermeMapper) {
-////        this.fermeService = fermeService;
-//        this.fermeMapper = fermeMapper;
-//    }
 
-    @PostMapping("/save")
+    @PostMapping("/create")
     public ResponseEntity<FermeVM> save(@RequestBody @Valid FermeVM fermeVM) {
         FermeDTO fermeDTO = fermeMapper.toDTO(fermeMapper.toEntity(fermeVM));
         FermeDTO ferme = fermeService.save(fermeDTO);
@@ -52,4 +49,12 @@ public class FermeController {
         fermeService.delete(id);
         return ResponseEntity.ok("Ferme a été bien supprimer");
     }
+
+    @GetMapping("/{nom}")
+    public ResponseEntity<FermeVM> getFermeDatails(@PathVariable String nom) {
+        Ferme ferme = fermeService.getFermeDatails(nom);
+        FermeVM fermeVM = fermeMapper.toVM(ferme);
+        return ResponseEntity.ok(fermeVM);
+    }
+
 }

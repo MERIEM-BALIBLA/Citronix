@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -18,4 +19,5 @@ public class Recolte {
     private Saison saison;
     private LocalDateTime date_de_recolte;
     private Double quatiteTotale;
+
 }

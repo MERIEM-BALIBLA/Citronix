@@ -49,7 +49,7 @@ public class RecolteController {
     }
 
     @GetMapping
-    public Page<Recolte> getAllProducts(
+    public Page<Recolte> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "id") String sortBy,

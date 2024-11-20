@@ -2,6 +2,8 @@ package com.example.citronix.service;
 
 import com.example.citronix.domain.Champ;
 import com.example.citronix.service.DTO.ChampDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -19,4 +21,6 @@ public interface ChampService {
     ChampDTO update(UUID id, ChampDTO champDTO);
 
     void delete(UUID id);
+
+    Page<Champ> findAll(Pageable pageable);
 }

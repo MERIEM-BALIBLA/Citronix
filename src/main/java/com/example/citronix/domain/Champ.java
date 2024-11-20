@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -20,5 +21,8 @@ public class Champ {
     private String nom;
 
     private double superficie;
+
+    @OneToMany(mappedBy = "champ")
+    List<Arbre> arbres;
 
 }

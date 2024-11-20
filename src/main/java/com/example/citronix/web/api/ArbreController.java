@@ -1,10 +1,14 @@
 package com.example.citronix.web.api;
 
+import com.example.citronix.domain.Arbre;
 import com.example.citronix.mapper.ArbreMapper;
 import com.example.citronix.service.ArbreService;
 import com.example.citronix.service.DTO.ArbreDTO;
 import com.example.citronix.web.VM.ArbreVM;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,4 +46,10 @@ public class ArbreController {
         return ResponseEntity.ok("Arbre a été bien supprimer");
     }
 
+    @GetMapping("/list")
+    public Page<ArbreVM> getAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Arbre> recoltesDetailsPage = arbreService.findAll(pageable);
+        return recoltesDetailsPage.map(arbreMapper::toVM);
+    }
 }

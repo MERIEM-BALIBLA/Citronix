@@ -12,6 +12,8 @@ import com.example.citronix.service.RecoltesDetailsService;
 import com.example.citronix.web.errors.ArbreUndefinedException;
 import com.example.citronix.web.errors.RecolteUndefinedException;
 import com.example.citronix.web.errors.RecoltesDetailsUndefinedException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -90,5 +92,11 @@ public class RecoltesDetailsServiceImpl implements RecoltesDetailsService {
         }
         recoltesDetailsRepository.delete(recoltesDetailsOptional.get());
     }
+
+    @Override
+    public Page<RecoltesDetails> findAll(Pageable pageable) {
+        return recoltesDetailsRepository.findAll(pageable);
+    }
+
 
 }

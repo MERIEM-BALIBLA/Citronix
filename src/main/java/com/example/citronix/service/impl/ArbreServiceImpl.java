@@ -7,10 +7,15 @@ import com.example.citronix.repository.ArbreRepository;
 import com.example.citronix.service.ArbreService;
 import com.example.citronix.service.ChampService;
 import com.example.citronix.service.DTO.ArbreDTO;
+import com.example.citronix.web.errors.ArbrePlantationMonthException;
 import com.example.citronix.web.errors.ArbreUndefinedException;
 import com.example.citronix.web.errors.ChampUndefinedException;
+import com.example.citronix.web.errors.MaximumArbreForFermeException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.time.Month;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,12 +33,26 @@ public class ArbreServiceImpl implements ArbreService {
 
     @Override
     public ArbreDTO save(ArbreDTO arbreDTO) {
-        Optional<Champ> champ = champService.findById(arbreDTO.getChamp_id());
-        if (champ.isEmpty()) {
+        Optional<Champ> optionalChamp = champService.findById(arbreDTO.getChamp_id());
+        if (optionalChamp.isEmpty()) {
             throw new ChampUndefinedException("Champ non trouvable");
         }
+        Champ champ = optionalChamp.get();
+
+        double maxArbrePourChamp = champ.getSuperficie() / 100;
+        if (champ.getArbres().size() + 1 > maxArbrePourChamp) {
+            throw new MaximumArbreForFermeException("Le champ a atteint le nombre maximal d'arbres autorisés.");
+        }
+
+
         Arbre arbre = arbreMapper.toEntityFromDTO(arbreDTO);
+        Month month = arbre.getDate_de_plantation().getMonth();
+        if (month != Month.MARCH && month != Month.APRIL && month != Month.MAY) {
+            throw new ArbrePlantationMonthException("Les arbres ne peuvent être plantés qu'entre mars et mai.");
+        }
+
         Arbre savedArbre = arbreRepository.save(arbre);
+
         return arbreMapper.toDTO(savedArbre);
     }
 
@@ -73,23 +92,8 @@ public class ArbreServiceImpl implements ArbreService {
         arbreRepository.delete(optionalArbre.get());
     }
 
-//    public Page<ArbreDTO> getAllProducts(
-//            @RequestParam(defaultValue = "0") int page,
-//            @RequestParam(defaultValue = "5") int size,
-//            @RequestParam(defaultValue = "id") String sortBy,
-//            @RequestParam(defaultValue = "true") boolean ascending
-//    ) {
-//        // Définir l'ordre de tri
-//        Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-//        Pageable pageable = PageRequest.of(page, size, sort);
-//
-//        // Récupérer la page des entités Recolte
-//        Page<Arbre> recoltePage = arbreRepository.findAll(pageable);
-//
-//        // Convertir la page de Recolte en page de RecolteDTO
-//        Page<RecolteDTO> recolteDTOPage = recoltePage.map(recolte -> modelMapper.map(recolte, RecolteDTO.class));
-//
-//        return recolteDTOPage;
-//
-//    }
+    @Override
+    public Page<Arbre> findAll(Pageable pageable) {
+        return arbreRepository.findAll(pageable);
+    }
 }

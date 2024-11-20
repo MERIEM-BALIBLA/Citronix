@@ -40,12 +40,17 @@ public class GlobalException {
     public String champMustUnderException(ChampMustUnderException ex) {
         return ex.getMessage();
     }
-
+//------------------------------
     @ExceptionHandler(TooManyChampsException.class)
     public String tooManyChampsException(TooManyChampsException ex) {
         return ex.getMessage();
     }
+    @ExceptionHandler(SuperficieException.class)
+    public String superficieException(SuperficieException ex) {
+        return ex.getMessage();
+    }
 
+//------------------------------
     @ExceptionHandler(InvalidRecolteException.class)
     public String invalidRecolteException(InvalidRecolteException ex) {
         return ex.getMessage();
@@ -73,4 +78,15 @@ public class GlobalException {
     public String recoltesDetailsUndefinedException(RecoltesDetailsUndefinedException ex) {
         return ex.getMessage();
     }
+
+    @ExceptionHandler(MaximumArbreForFermeException.class)
+    public String maximumArbreForFermeException(MaximumArbreForFermeException ex) {
+        return ex.getMessage();
+    }
+
+    @ExceptionHandler(ArbrePlantationMonthException.class)
+    public String arbrePlantationMonthException(ArbrePlantationMonthException ex) {
+        return ex.getMessage();
+    }
+
 }

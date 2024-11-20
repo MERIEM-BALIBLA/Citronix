@@ -77,16 +77,34 @@ public class FermeServiceImpl implements FermeService {
         fermeRepository.delete(ferme);
     }
 
-
+    @Override
     public List<Ferme> getFieldsGraterThan() {
         List<Ferme> fermeList = findAll();
 
         return fermeList.stream()
-                .filter(ferme -> ferme.getChamps().stream()
-                        .mapToDouble(Champ::getSuperficie)
-                        .sum() < 4000)
+                .filter(ferme -> ferme.getChamps() != null &&
+                        ferme.getChamps().stream()
+                                .mapToDouble(Champ::getSuperficie)
+                                .sum() < ferme.getSuperficie())
                 .toList();
     }
 
+    @Override
+    public boolean verifierSuperficieDeFerme(Ferme ferme) {
+        List<Champ> champList = ferme.getChamps();
+        double totalSuperficieChamps = champList.stream()
+                .mapToDouble(Champ::getSuperficie)
+                .sum();
+        return totalSuperficieChamps < ferme.getSuperficie();
+    }
 
+
+    @Override
+    public Ferme getFermeDatails(String nom) {
+        Optional<Ferme> optionalFerme = findByNom(nom);
+        if (optionalFerme.isEmpty()) {
+            throw new FermeUndefinedException("Il n'existe pas une ferme avec ce nom");
+        }
+        return optionalFerme.get();
+    }
 }
