@@ -1,6 +1,6 @@
 package com.example.citronix.web.VM;
 
-import com.example.citronix.domain.enums.ArbreAge;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,8 +12,12 @@ import java.util.UUID;
 @Getter
 @Setter
 public class ArbreVM {
-    private LocalDateTime date_de_plantation = LocalDateTime.now();
-    private ArbreAge age;
-    private UUID champ;
-    private double productivite_annuelle;
+
+    @NotNull(message = "in the champ")
+    private LocalDateTime date_de_plantation;
+
+
+    @NotNull(message = "in the champ")
+    private UUID champ_id;
+
 }

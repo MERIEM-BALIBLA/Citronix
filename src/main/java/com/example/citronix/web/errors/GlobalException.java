@@ -31,4 +31,46 @@ public class GlobalException {
         return ex.getMessage();
     }
 
+    @ExceptionHandler(ChampUndefinedException.class)
+    public String champUndefinedException(ChampUndefinedException ex) {
+        return ex.getMessage();
+    }
+
+    @ExceptionHandler(ChampMustUnderException.class)
+    public String champMustUnderException(ChampMustUnderException ex) {
+        return ex.getMessage();
+    }
+
+    @ExceptionHandler(TooManyChampsException.class)
+    public String tooManyChampsException(TooManyChampsException ex) {
+        return ex.getMessage();
+    }
+
+    @ExceptionHandler(InvalidRecolteException.class)
+    public String invalidRecolteException(InvalidRecolteException ex) {
+        return ex.getMessage();
+    }
+
+    @ExceptionHandler(DuplicateRecolteException.class)
+    public String duplicateRecolteException(DuplicateRecolteException ex) {
+        return ex.getMessage();
+    }
+
+    @ExceptionHandler(ArbreUndefinedException.class)
+    public String arbreUndefinedException(ArbreUndefinedException ex) {
+        return ex.getMessage();
+    }
+
+
+    //    --------
+    @ExceptionHandler(RecolteUndefinedException.class)
+    public String recolteUndefinedException(RecolteUndefinedException ex) {
+        return ex.getMessage();
+    }
+
+    //    --------
+    @ExceptionHandler(RecoltesDetailsUndefinedException.class)
+    public String recoltesDetailsUndefinedException(RecoltesDetailsUndefinedException ex) {
+        return ex.getMessage();
+    }
 }

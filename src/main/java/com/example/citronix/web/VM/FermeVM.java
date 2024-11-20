@@ -31,6 +31,6 @@ public class FermeVM {
     private LocalDateTime date_de_creation = LocalDateTime.now();
 
     //    -------------------------------------------------------
-    private List<ChampVM> champVMList;
+//    private List<ChampVM> champVMList;
 
 }

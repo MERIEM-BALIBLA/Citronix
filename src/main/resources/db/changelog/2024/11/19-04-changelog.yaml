@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 1731962157541-1
+      id: 1732054555304-1
       author: Youcode (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -10,24 +10,23 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
-                    primaryKeyName: pk_arbre
+                    primaryKeyName: pk_champ
                   name: id
                   type: UUID
               - column:
-                  name: date_de_plantation
-                  type: DATETIME
-              - column:
-                  name: age
-                  type: SMALLINT
-              - column:
-                  name: champ_id
+                  name: ferme_id
                   type: UUID
               - column:
-                  name: productivite_annuelle
+                  name: nom
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: superficie
                   type: DOUBLE
-            tableName: arbre
+            tableName: champ
   - changeSet:
-      id: 1731962157541-2
+      id: 1732054555304-2
       author: Youcode (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -45,7 +44,7 @@ databaseChangeLog:
                   type: UUID
             tableName: ferme_champs
   - changeSet:
-      id: 1731962157541-3
+      id: 1732054555304-3
       author: Youcode (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -54,7 +53,7 @@ databaseChangeLog:
             constraintName: uc_ferme_champs_champs
             tableName: ferme_champs
   - changeSet:
-      id: 1731962157541-4
+      id: 1732054555304-4
       author: Youcode (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -65,7 +64,18 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: champ
   - changeSet:
-      id: 1731962157541-5
+      id: 1732054555304-5
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: ferme_id
+            baseTableName: champ
+            constraintName: FK_CHAMP_ON_FERME
+            referencedColumnNames: id
+            referencedTableName: ferme
+  - changeSet:
+      id: 1732054555304-6
       author: Youcode (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -76,7 +86,7 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: champ
   - changeSet:
-      id: 1731962157541-6
+      id: 1732054555304-7
       author: Youcode (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:

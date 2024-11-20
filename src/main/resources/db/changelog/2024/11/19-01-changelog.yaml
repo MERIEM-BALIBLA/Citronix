@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1732027034992-1
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_recolte
+                  name: id
+                  type: UUID
+              - column:
+                  name: saison
+                  type: SMALLINT
+              - column:
+                  name: date_de_recolte
+                  type: DATETIME
+              - column:
+                  name: quatite_totale
+                  type: DOUBLE
+            tableName: recolte
+

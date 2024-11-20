@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 1731947184361-1
+      id: 1732033207748-1
       author: Youcode (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
@@ -10,27 +10,25 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
-                    primaryKeyName: pk_champ
+                    primaryKeyName: pk_arbre
                   name: id
                   type: UUID
               - column:
-                  name: ferme_id
-                  type: UUID
+                  name: date_de_plantation
+                  type: DATETIME
               - column:
-                  constraints:
-                    nullable: false
-                  name: superficie
-                  type: DOUBLE
-            tableName: champ
+                  name: champ_id
+                  type: UUID
+            tableName: arbre
   - changeSet:
-      id: 1731947184361-2
+      id: 1732033207748-2
       author: Youcode (generated)
       objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
       changes:
         - addForeignKeyConstraint:
-            baseColumnNames: ferme_id
-            baseTableName: champ
-            constraintName: FK_CHAMP_ON_FERME
+            baseColumnNames: champ_id
+            baseTableName: arbre
+            constraintName: FK_ARBRE_ON_CHAMP
             referencedColumnNames: id
-            referencedTableName: ferme
+            referencedTableName: champ
 

@@ -8,6 +8,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ChampRepository extends JpaRepository<Champ, UUID> {
-    boolean existsByFermeAndSuperficie(Ferme ferme, double superficie);
+    Optional<Champ> existsByNom(String nom);
+    Optional<Champ> findById(UUID id);
 
+    int countByFerme(Ferme ferme);
 }

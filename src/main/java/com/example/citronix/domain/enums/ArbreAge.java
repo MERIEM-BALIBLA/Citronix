@@ -10,4 +10,8 @@ public enum ArbreAge {
     ArbreAge(double v) {
         this.v = v;
     }
+
+    public double getV() {
+        return v;
+    }
 }

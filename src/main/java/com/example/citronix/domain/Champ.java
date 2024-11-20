@@ -17,6 +17,8 @@ public class Champ {
     @ManyToOne
     private Ferme ferme;
 
+    private String nom;
+
     private double superficie;
 
 }

@@ -6,6 +6,7 @@ import com.example.citronix.service.DTO.FermeDTO;
 import com.example.citronix.service.FermeService;
 import com.example.citronix.web.VM.FermeVM;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,14 +16,15 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/ferme")
 public class FermeController {
-
+    @Autowired
     private FermeService fermeService;
+    @Autowired
     private FermeMapper fermeMapper;
 
-    public FermeController(FermeService fermeService, FermeMapper fermeMapper) {
-        this.fermeService = fermeService;
-        this.fermeMapper = fermeMapper;
-    }
+//    public FermeController(FermeMapper fermeMapper) {
+////        this.fermeService = fermeService;
+//        this.fermeMapper = fermeMapper;
+//    }
 
     @PostMapping("/save")
     public ResponseEntity<FermeVM> save(@RequestBody @Valid FermeVM fermeVM) {

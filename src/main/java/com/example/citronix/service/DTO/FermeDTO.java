@@ -23,6 +23,6 @@ public class FermeDTO {
 
 //    --------------------------------------------------------------
 
-    private List<ChampDTO> champDTOList;
+//    private List<ChampDTO> champDTOList;
 
 }

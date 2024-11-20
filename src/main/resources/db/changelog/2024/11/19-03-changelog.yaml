@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1732049689867-1
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_recoltesdetails
+                  name: id
+                  type: UUID
+              - column:
+                  name: arbre_id
+                  type: UUID
+              - column:
+                  name: recolte_id
+                  type: UUID
+              - column:
+                  name: quantite
+                  type: DOUBLE
+            tableName: recoltes_details
+  - changeSet:
+      id: 1732049689867-2
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: arbre_id
+            baseTableName: recoltes_details
+            constraintName: FK_RECOLTESDETAILS_ON_ARBRE
+            referencedColumnNames: id
+            referencedTableName: arbre
+  - changeSet:
+      id: 1732049689867-3
+      author: Youcode (generated)
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: recolte_id
+            baseTableName: recoltes_details
+            constraintName: FK_RECOLTESDETAILS_ON_RECOLTE
+            referencedColumnNames: id
+            referencedTableName: recolte
+

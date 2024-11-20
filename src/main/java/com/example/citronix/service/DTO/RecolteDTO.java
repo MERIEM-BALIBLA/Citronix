@@ -1,20 +1,16 @@
-package com.example.citronix.domain;
+package com.example.citronix.service.DTO;
 
 import com.example.citronix.domain.enums.Saison;
-import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
-@Entity
+@Data
 @Getter
 @Setter
-public class Recolte {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+public class RecolteDTO {
     private Saison saison;
     private LocalDateTime date_de_recolte;
     private Double quatiteTotale;
