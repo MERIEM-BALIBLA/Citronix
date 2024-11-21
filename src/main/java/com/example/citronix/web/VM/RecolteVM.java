@@ -9,8 +9,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
-@Data
+//@Data
 @Getter
 @Setter
 public class RecolteVM {
@@ -22,10 +23,8 @@ public class RecolteVM {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime date_de_recolte;
 
-    @NotNull(message = "La quantité totale est obligatoire")
-    @Positive(message = "La quantité totale doit être supérieure à 0")
-    private Double quatiteTotale;
+    @NotNull(message = "La champ totale est obligatoire")
 
-    private List<RecoltesDetailsVM> recoltesDetailsVMS;
-
+//    private List<RecoltesDetailsVM> recoltesDetailsVMS;
+    private UUID champ;
 }

@@ -5,7 +5,6 @@ import com.example.citronix.service.DTO.ArbreDTO;
 import com.example.citronix.web.VM.ArbreVM;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.springframework.data.domain.Page;
 
 @Mapper(componentModel = "spring")
 public interface ArbreMapper {
@@ -20,12 +19,12 @@ public interface ArbreMapper {
 //    -------------------------------------------------------
 
     //    VM -> Entity
-    @Mapping(target = "date_de_plantation", source = "date_de_plantation")
+//    @Mapping(target = "date_de_plantation", source = "date_de_plantation")
     @Mapping(target = "champ.id", source = "champ_id")
     Arbre toEntityFromVM(ArbreVM arbreVM);
 
     //   Entity -> VM
-    @Mapping(target = "date_de_plantation", source = "date_de_plantation")
+//    @Mapping(target = "date_de_plantation", source = "date_de_plantation")
     @Mapping(target = "champ_id", source = "champ.id")
     ArbreVM toVM(Arbre arbre);
 

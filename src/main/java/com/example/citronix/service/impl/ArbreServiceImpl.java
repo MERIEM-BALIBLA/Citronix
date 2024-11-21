@@ -37,12 +37,6 @@ public class ArbreServiceImpl implements ArbreService {
     @Autowired
     private RecoltesDetailsService recoltesDetailsService;
 
-//    public ArbreServiceImpl(ArbreRepository arbreRepository, ArbreMapper arbreMapper, ChampService champService) {
-//        this.arbreRepository = arbreRepository;
-//        this.arbreMapper = arbreMapper;
-//        this.champService = champService;
-////        this.recoltesDetailsService = recoltesDetailsService;
-//    }
 
     @Override
     public ArbreDTO save(ArbreDTO arbreDTO) {

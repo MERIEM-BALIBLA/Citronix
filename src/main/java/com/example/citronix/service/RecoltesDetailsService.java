@@ -14,6 +14,8 @@ import java.util.UUID;
 public interface RecoltesDetailsService {
     RecoltesDetailsDTO save(RecoltesDetailsDTO recoltesDetailsDTO);
 
+    RecoltesDetails saveRecolteDetails(RecoltesDetails recoltesDetails);
+
     List<RecoltesDetails> saveAll(List<RecoltesDetails> recoltesDetails);
 
     Optional<RecoltesDetails> findById(UUID id);

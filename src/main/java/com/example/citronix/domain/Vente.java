@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -21,4 +22,7 @@ public class Vente {
     private Recolte recolte;
     private String clientName;
 
+    public double calculRevenu() {
+        return recolte.getQuatiteTotale() * prix_unitaire;
+    }
 }

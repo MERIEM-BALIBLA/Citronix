@@ -15,6 +15,6 @@ public class RecoltesDetailsVM {
     @NotNull(message = "il faut remplir le champ de recolte")
     private UUID recolte;
 
-    @NotNull(message = "il faut remplir le champ de la quantité")
-    private double quantite;
+//    @NotNull(message = "il faut remplir le champ de la quantité")
+//    private double quantite;
 }

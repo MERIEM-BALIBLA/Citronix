@@ -5,7 +5,6 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -23,7 +22,7 @@ public class FermeDTO {
 
     @NotNull(message = "le superficie de la ferme ne doit pas etre null")
     @Min(value = 100, message = "la superficie doit être supérieure à 100")
-    @Max(value = 100000, message = "la superficie doit être supérieure à zéro")
+    @Max(value = 1000000, message = "la superficie doit être supérieure à zéro")
     @Positive(message = "La valeur du superficie doit ete positive ")
     private Double superficie;
 
@@ -34,6 +33,6 @@ public class FermeDTO {
 
 //    --------------------------------------------------------------
 
-//    private List<ChampDTO> champDTOList;
+    private List<ChampDTO> champDTOList;
 
 }

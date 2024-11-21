@@ -31,9 +31,11 @@ public class ChampController {
 
     @PostMapping("/create")
     public ResponseEntity<ChampVM> save(@RequestBody @Valid ChampVM champVM) {
-        ChampDTO champDTO = champMapper.toDTO(champMapper.toEntity(champVM));
-        ChampDTO savedChamp = champService.save(champDTO);
-        return ResponseEntity.ok(champMapper.toVM(champMapper.toEntity(savedChamp)));
+//        ChampDTO champDTO = champMapper.toDTO(champMapper.toEntity(champVM));
+//        ChampDTO savedChamp = champService.save(champDTO);
+        Champ champ = champMapper.toEntity(champVM);
+        Champ savedChamp = champService.save(champ);
+        return ResponseEntity.ok(champMapper.toVM(champ));
     }
 
     @PutMapping("/{id}")

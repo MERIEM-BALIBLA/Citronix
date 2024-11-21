@@ -29,9 +29,9 @@ public class RecolteController {
 
 
     @PostMapping("/create")
-    public ResponseEntity<Recolte> createRecolte(@Valid @RequestBody RecolteVM recolteVM) {
+    public ResponseEntity<RecolteVM> createRecolte(@Valid @RequestBody RecolteVM recolteVM) {
         Recolte createdRecolte = recolteService.save(recolteVM);
-        return ResponseEntity.ok(createdRecolte);
+        return ResponseEntity.ok(recolteMapper.toVM(createdRecolte));
     }
 //    public ResponseEntity<RecolteVM> save(@RequestBody @Valid RecolteVM recolteVM) {
 //        RecolteDTO recolteDTO = recolteMapper.toDTO(recolteMapper.toEntityFromVM(recolteVM));

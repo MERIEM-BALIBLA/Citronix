@@ -33,29 +33,16 @@ public class ChampServiceImpl implements ChampService {
     @Autowired
     private  ArbreService arbreService;
 
-//    public ChampServiceImpl(ChampRepository champRepository, ChampMapper champMapper, FermeService fermeService,
-//                            ArbreService arbreService) {
-//        this.champRepository = champRepository;
-//        this.champMapper = champMapper;
-//        this.fermeService = fermeService;
-//        this.arbreService = arbreService;
-//    }
-
-    private boolean champSuperficie(Champ champ) {
-        double champSuperficie = champ.getSuperficie();
-        double fermeSuperficie = champ.getFerme().getSuperficie();
-        return champSuperficie <= 0.5 * fermeSuperficie;
-    }
 
     @Override
     public Optional<Champ> findByNom(String nom) {
         return champRepository.findByNom(nom);
     }
 
-    @Override
-    public Optional<Champ> findByFerme(Ferme ferme) {
-        return champRepository.findByFerme(ferme);
-    }
+//    @Override
+//    public Optional<Champ> findByFerme(Ferme ferme) {
+//        return champRepository.findByFerme(ferme);
+//    }
 
     private boolean isSuperficieExceedingLimit(Champ newChamp) {
         Ferme ferme = newChamp.getFerme();
@@ -72,11 +59,17 @@ public class ChampServiceImpl implements ChampService {
         return totalSuperficie >= fermeSuperficie;
     }
 
+    private boolean champSuperficie(Champ champ, Ferme ferme) {
+        double champSuperficie = champ.getSuperficie();
+        double fermeSuperficie = ferme.getSuperficie();
+        return champSuperficie >= 0.5 * fermeSuperficie;
+    }
+
     @Override
-    public ChampDTO save(ChampDTO champDTO) {
+    public Champ save(Champ champ) {
         // Verifier si la ferme existe
-        String ferme_name = champDTO.getFerme();
-        Optional<Ferme> fermeOptional = fermeService.findByNom(ferme_name);
+        Ferme champFerme = champ.getFerme();
+        Optional<Ferme> fermeOptional = fermeService.findByNom(champFerme.getNom());
         if (fermeOptional.isEmpty()) {
             throw new FermeUndefinedException("Il n'existe pas une ferme avec ce nom");
         }
@@ -84,28 +77,34 @@ public class ChampServiceImpl implements ChampService {
         Ferme ferme = fermeOptional.get();
 
         // Verifier l'existence d'un champ avec le même nom
-        Optional<Champ> champOptional = findByNom(champDTO.getNom());
-        Optional<Champ> optionalChamp = findByFerme(ferme);
-        if (champOptional.isPresent() && optionalChamp.isPresent()) {
+        Optional<Champ> champOptional = findByNom(champ.getNom());
+        if (champOptional.isPresent()) {
             throw new ChampAlreadyExistsException("Un champ avec ce nom existe déjà");
         }
 
+        // Verifier si Ferme contient plus de 10 champs
         int champCount = champRepository.countByFerme(ferme);
         if (champCount >= 10) {
             throw new TooManyChampsException("Une ferme ne peut pas avoir plus de 10 champs");
         }
 
-        // DTO -> Entity
-        Champ champ = champMapper.toEntity(champDTO);
+        // Verifier si superficie du champ prend 50% de la ferme
+        if (champSuperficie(champ, ferme)) {
+            throw new ChampMustUnderException("La superficie du champ ne doit pas prendre plus de 50% du ferme");
+        }
+
+        if(champ.getSuperficie() < 1000){
+            throw new SuperficieException("La superficie du champ doit etre soit 1000 ou plus");
+        }
+
         champ.setFerme(ferme);
 
+        // Verifier si la somme des superficie des champs > a la superficie de l'arbre
         if (isSuperficieExceedingLimit(champ)) {
             throw new SuperficieException("La somme des superficies des champs doit être inférieure à la superficie de la ferme");
         }
 
-        // Save the Champ
-        Champ champSaved = champRepository.save(champ);
-        return champMapper.toDTO(champSaved);
+        return champRepository.save(champ);
     }
 
 /*
@@ -156,13 +155,13 @@ public class ChampServiceImpl implements ChampService {
     @Override
     public ChampDTO update(UUID id, ChampDTO champDTO) {
 
-//        Verifier si la ferme existe deja
+        // Verifier si la ferme existe deja
         Optional<Champ> champOptional = findById(id);
         if (champOptional.isEmpty()) {
             throw new FermeUndefinedException("il n'existe pas un champ avec ce ID");
         }
 
-//        verifier s'il existe une ferme avec ce nom
+        // verifier s'il existe une ferme avec ce nom
         String ferme_name = champDTO.getFerme();
         Optional<Ferme> fermeOptional = fermeService.findByNom(ferme_name);
         if (fermeOptional.isEmpty()) {
@@ -172,18 +171,18 @@ public class ChampServiceImpl implements ChampService {
         Ferme ferme = fermeOptional.get();
         Champ existingChamp = champOptional.get();
 
-//        Verifier s'il existe un champ avec le meme nom et ferme en meme temps
+        // Verifier s'il existe un champ avec le meme nom et ferme en meme temps
         Optional<Champ> champNom = findByNom(champDTO.getNom());
-        Optional<Champ> champFerme = findByFerme(ferme);
-        if (champNom.isPresent() && champFerme.isPresent()) {
+        // Optional<Champ> champFerme = findByFerme(ferme);
+        if (champNom.isPresent()) {
             throw new ChampAlreadyExistsException("Un champ avec ce nom et ferme existe déjà");
         }
 
         existingChamp.setFerme(ferme);
         existingChamp.setSuperficie(champDTO.getSuperficie());
         existingChamp.setNom(champDTO.getNom());
+
         champRepository.save(existingChamp);
-        // Entity -> DTO
         return champMapper.toDTO(existingChamp);
     }
 

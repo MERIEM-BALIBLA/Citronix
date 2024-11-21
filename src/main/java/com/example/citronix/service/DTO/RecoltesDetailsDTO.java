@@ -8,7 +8,6 @@ import java.util.UUID;
 @Getter
 @Setter
 public class RecoltesDetailsDTO {
-//    private UUID id;
     private UUID arbre;
     private UUID recolte;
     private double quantite;

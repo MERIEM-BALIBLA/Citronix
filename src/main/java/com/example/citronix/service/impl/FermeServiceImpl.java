@@ -4,16 +4,18 @@ import com.example.citronix.domain.Champ;
 import com.example.citronix.domain.Ferme;
 import com.example.citronix.mapper.FermeMapper;
 import com.example.citronix.repository.FermeRepository;
-import com.example.citronix.service.ArbreService;
-import com.example.citronix.service.ChampService;
 import com.example.citronix.service.DTO.FermeDTO;
 import com.example.citronix.service.FermeService;
+import com.example.citronix.web.errors.DateOfFermeException;
 import com.example.citronix.web.errors.FermeAlreadyExistsException;
 import com.example.citronix.web.errors.FermeUndefinedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -37,20 +39,23 @@ public class FermeServiceImpl implements FermeService {
         return fermeRepository.findByNom(nom);
     }
 
-    @Override
-    public FermeDTO save(FermeDTO fermeDTO) {
-//        DTO -> Entity
-        Ferme ferme = fermeMapper.toEntity(fermeDTO);
 
-//        Verifier l'existance d'une ferme avce le meme nom
+    @Override
+    public Ferme save(Ferme ferme) {
+
+        // Verifier l'existance d'une ferme avce le meme nom
         Optional<Ferme> fermeOptional = findByNom(ferme.getNom());
         if (fermeOptional.isPresent()) {
             throw new FermeAlreadyExistsException("il existe déja une ferme avec ce nom!!");
         }
 
-//        Enregistrer la nouvlle ferme
-        Ferme savedFerme = fermeRepository.save(ferme);
-        return fermeMapper.toDTO(savedFerme);
+        // Validation de la date
+        if (ferme.getDate_de_creation().isAfter(LocalDateTime.now())) {
+            throw new DateOfFermeException("La date de création doit ete au passé");
+        }
+
+        // Enregistrer la nouvlle ferme
+        return fermeRepository.save(ferme);
     }
 
     @Override
@@ -93,33 +98,40 @@ public class FermeServiceImpl implements FermeService {
     }
 
     @Override
-    public List<Ferme> getFieldsGraterThan() {
-        List<Ferme> fermeList = findAll();
-
-        return fermeList.stream()
-                .filter(ferme -> ferme.getChamps() != null &&
-                        ferme.getChamps().stream()
-                                .mapToDouble(Champ::getSuperficie)
-                                .sum() < ferme.getSuperficie())
-                .toList();
-    }
-
-    @Override
-    public boolean verifierSuperficieDeFerme(Ferme ferme) {
-        List<Champ> champList = ferme.getChamps();
-        double totalSuperficieChamps = champList.stream()
-                .mapToDouble(Champ::getSuperficie)
-                .sum();
-        return totalSuperficieChamps < ferme.getSuperficie();
-    }
-
-
-    @Override
     public Ferme getFermeDatails(String nom) {
         Optional<Ferme> optionalFerme = findByNom(nom);
         if (optionalFerme.isEmpty()) {
             throw new FermeUndefinedException("Il n'existe pas une ferme avec ce nom");
         }
         return optionalFerme.get();
+    }
+
+    @Override
+    public Ferme search(String name, String location, Double area) {
+
+        if (name == null && location == null && area == null) {
+            throw new IllegalArgumentException("At least one search criteria must be provided.");
+        }
+
+        Ferme exampleFerme = Ferme.builder()
+                .nom(name)
+                .localisation(location)
+                .superficie(area)
+                .build();
+
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withIgnorePaths("id")
+                .withIgnoreNullValues()
+                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("location", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("area", ExampleMatcher.GenericPropertyMatchers.exact())
+                .withMatcher("createdAt", ExampleMatcher.GenericPropertyMatchers.exact());
+
+
+        Example<Ferme> example = Example.of(exampleFerme, matcher);
+
+
+        return fermeRepository.findOne(example)
+                .orElseThrow(() -> new FermeUndefinedException("No farm found with the given criteria"));
     }
 }

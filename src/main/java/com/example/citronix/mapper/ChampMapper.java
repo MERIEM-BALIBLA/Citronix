@@ -13,22 +13,22 @@ public interface ChampMapper {
 
     // DTO -> Entity
     @Mapping(target = "ferme.nom", source = "ferme")
-    @Mapping(target = "nom", source = "nom")
+//    @Mapping(target = "nom", source = "nom")
     Champ toEntity(ChampDTO champDTO);
 
     List<Champ> toEntity(List<ChampDTO> champDTOS);
 
     // Entity -> VM
     @Mapping(target = "ferme", source = "ferme.nom")
-    @Mapping(target = "nom", source = "nom")
+//    @Mapping(target = "nom", source = "nom")
     ChampVM toVM(Champ champ);
 
     @Mapping(target = "ferme.nom", source = "ferme")
-    @Mapping(target = "nom", source = "nom")
+//    @Mapping(target = "nom", source = "nom")
     Champ toEntity(ChampVM champVM);
 
     @Mapping(target = "ferme", source = "ferme.nom")
-    @Mapping(target = "nom", source = "nom")
+//    @Mapping(target = "nom", source = "nom")
     ChampDTO toDTO(Champ champ);
 
 }

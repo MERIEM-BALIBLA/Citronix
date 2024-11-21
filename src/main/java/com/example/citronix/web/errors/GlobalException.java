@@ -26,6 +26,22 @@ public class GlobalException {
         return ex.getMessage();
     }
 
+    @ExceptionHandler(TooManyChampsException.class)
+    public String tooManyChampsException(TooManyChampsException ex) {
+        return ex.getMessage();
+    }
+
+    @ExceptionHandler(SuperficieException.class)
+    public String superficieException(SuperficieException ex) {
+        return ex.getMessage();
+    }
+
+    @ExceptionHandler(DateOfFermeException.class)
+    public String dateOfFermeException(DateOfFermeException ex) {
+        return ex.getMessage();
+    }
+
+    //    ------------------------
     @ExceptionHandler(ChampAlreadyExistsException.class)
     public String champAlreadyExistsException(ChampAlreadyExistsException ex) {
         return ex.getMessage();
@@ -40,17 +56,11 @@ public class GlobalException {
     public String champMustUnderException(ChampMustUnderException ex) {
         return ex.getMessage();
     }
-//------------------------------
-    @ExceptionHandler(TooManyChampsException.class)
-    public String tooManyChampsException(TooManyChampsException ex) {
-        return ex.getMessage();
-    }
-    @ExceptionHandler(SuperficieException.class)
-    public String superficieException(SuperficieException ex) {
-        return ex.getMessage();
-    }
 
-//------------------------------
+    //------------------------------
+
+
+    //------------------------------
     @ExceptionHandler(InvalidRecolteException.class)
     public String invalidRecolteException(InvalidRecolteException ex) {
         return ex.getMessage();
@@ -89,4 +99,14 @@ public class GlobalException {
         return ex.getMessage();
     }
 
+    //    ----------------------- Vente
+    @ExceptionHandler(VenteUndefinedException.class)
+    public String venteUndefinedException(VenteUndefinedException ex) {
+        return ex.getMessage();
+    }
+
+    @ExceptionHandler(VenteAlreadyExistException.class)
+    public String venteAlreadyExistException(VenteUndefinedException ex) {
+        return ex.getMessage();
+    }
 }

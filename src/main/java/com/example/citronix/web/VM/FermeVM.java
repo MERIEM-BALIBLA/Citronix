@@ -23,7 +23,7 @@ public class FermeVM {
 
     @NotNull(message = "le superficie de la ferme ne doit pas etre null")
     @Min(value = 100, message = "la superficie doit être supérieure à 100")
-    @Max(value = 100000, message = "la superficie doit être supérieure à zéro")
+    @Max(value = 1000000, message = "la superficie doit être supérieure à zéro")
     @Positive(message = "La valeur du superficie doit ete positive ")
     private Double superficie;
 
@@ -32,6 +32,6 @@ public class FermeVM {
     private LocalDateTime date_de_creation;
 
     //    -------------------------------------------------------
-//    private List<ChampVM> champVMList;
+    private List<ChampVM> champVMList;
 
 }

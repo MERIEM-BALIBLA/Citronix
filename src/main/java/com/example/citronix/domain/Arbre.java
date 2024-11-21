@@ -1,13 +1,10 @@
 package com.example.citronix.domain;
 
-import com.example.citronix.domain.enums.ArbreAge;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.data.domain.Limit;
+import lombok.*;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import java.time.Period;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,22 +25,16 @@ public class Arbre {
     @OneToMany(mappedBy = "arbre")
     List<RecoltesDetails> recoltesDetailsList;
 
-    public ArbreAge getAge() {
-        long nombreDAnneesDepuisPlantation = ChronoUnit.YEARS.between(this.date_de_plantation, LocalDateTime.now());
-
-        if (nombreDAnneesDepuisPlantation < 5) {
-            return ArbreAge.YOUNG;
-        } else if (nombreDAnneesDepuisPlantation < 15) {
-            return ArbreAge.MATURE;
-        } else {
-            return ArbreAge.OLD;
-        }
+    public Integer getAge() {
+        return Period.between(this.date_de_plantation.toLocalDate(), LocalDateTime.now().toLocalDate()).getYears();
     }
 
-//    public double getProductivite() {
-//        ArbreAge age = getAge();
-//        return age.getV();
-//    }
-
+    public double calculteAnnualProductivity() {
+        int age = getAge();
+        if (age < 3) return 2.5;
+        if (age <= 10) return 12.0;
+        if (age <= 20) return 20.0;
+        return 0;
+    }
 
 }

@@ -22,12 +22,13 @@ public class FermeController {
     @Autowired
     private FermeMapper fermeMapper;
 
-
     @PostMapping("/create")
     public ResponseEntity<FermeVM> save(@RequestBody @Valid FermeVM fermeVM) {
-        FermeDTO fermeDTO = fermeMapper.toDTO(fermeMapper.toEntity(fermeVM));
-        FermeDTO ferme = fermeService.save(fermeDTO);
-        return ResponseEntity.ok(fermeMapper.toVM(fermeMapper.toEntity(ferme)));
+//        FermeDTO fermeDTO = fermeMapper.toDTO(fermeMapper.toEntity(fermeVM));
+        Ferme ferme = fermeMapper.toEntity(fermeVM);
+//        FermeDTO ferme = fermeService.save(fe);
+        Ferme savedFerme = fermeService.save(ferme);
+        return ResponseEntity.ok(fermeMapper.toVM(savedFerme));
     }
 
     @GetMapping("/list")
@@ -55,6 +56,14 @@ public class FermeController {
         Ferme ferme = fermeService.getFermeDatails(nom);
         FermeVM fermeVM = fermeMapper.toVM(ferme);
         return ResponseEntity.ok(fermeVM);
+    }
+
+    @GetMapping("/search")
+    public Ferme searchFerme(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) Double area) {
+        return fermeService.search(name, location, area);
     }
 
 }

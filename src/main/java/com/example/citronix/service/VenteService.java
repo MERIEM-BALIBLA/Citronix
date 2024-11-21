@@ -14,4 +14,6 @@ public interface VenteService {
     Optional<Vente> findById(UUID id);
 
     void delete(UUID id);
+
+    VenteDTO update(UUID id, VenteDTO venteDTO);
 }

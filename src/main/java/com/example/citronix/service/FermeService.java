@@ -13,7 +13,7 @@ public interface FermeService {
 
     Optional<Ferme> findByNom(String nom);
 
-    FermeDTO save(FermeDTO fermeDTO);
+    Ferme save(Ferme ferme);
 
     List<Ferme> findAll();
 
@@ -21,9 +21,11 @@ public interface FermeService {
 
     void delete(UUID id);
 
-    List<Ferme> getFieldsGraterThan();
+//    List<Ferme> getFieldsGraterThan();
 
-    boolean verifierSuperficieDeFerme(Ferme ferme);
+//    boolean verifierSuperficieDeFerme(Ferme ferme);
 
     Ferme getFermeDatails(String nom);
+
+    Ferme search(String name, String location, Double area);
 }

@@ -64,7 +64,13 @@ public class RecoltesDetailsServiceImpl implements RecoltesDetailsService {
     }
 
     @Override
+    public RecoltesDetails saveRecolteDetails(RecoltesDetails recoltesDetails){
+        return recoltesDetailsRepository.save(recoltesDetails);
+    }
+
+    @Override
     public List<RecoltesDetails> saveAll(List<RecoltesDetails> recoltesDetails) {
+        recoltesDetails.forEach(this::validateArbreAndRecolte);
         return recoltesDetailsRepository.saveAll(recoltesDetails);
     }
 
