@@ -20,4 +20,7 @@ public class Recolte {
     private LocalDateTime date_de_recolte;
     private Double quatiteTotale;
 
+    @OneToMany(mappedBy = "recolte")
+    private List<RecoltesDetails> recoltesDetails;
+
 }

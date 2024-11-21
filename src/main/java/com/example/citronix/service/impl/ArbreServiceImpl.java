@@ -2,34 +2,47 @@ package com.example.citronix.service.impl;
 
 import com.example.citronix.domain.Arbre;
 import com.example.citronix.domain.Champ;
+import com.example.citronix.domain.RecoltesDetails;
 import com.example.citronix.mapper.ArbreMapper;
 import com.example.citronix.repository.ArbreRepository;
 import com.example.citronix.service.ArbreService;
 import com.example.citronix.service.ChampService;
 import com.example.citronix.service.DTO.ArbreDTO;
+import com.example.citronix.service.RecoltesDetailsService;
 import com.example.citronix.web.errors.ArbrePlantationMonthException;
 import com.example.citronix.web.errors.ArbreUndefinedException;
 import com.example.citronix.web.errors.ChampUndefinedException;
 import com.example.citronix.web.errors.MaximumArbreForFermeException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.time.Month;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Component
 public class ArbreServiceImpl implements ArbreService {
-    private final ArbreRepository arbreRepository;
-    private final ArbreMapper arbreMapper;
-    private final ChampService champService;
+    @Autowired
+    private ArbreRepository arbreRepository;
+    @Autowired
+    private ArbreMapper arbreMapper;
+    @Autowired
+    private ChampService champService;
 
-    public ArbreServiceImpl(ArbreRepository arbreRepository, ArbreMapper arbreMapper, ChampService champService) {
-        this.arbreRepository = arbreRepository;
-        this.arbreMapper = arbreMapper;
-        this.champService = champService;
-    }
+    @Lazy
+    @Autowired
+    private RecoltesDetailsService recoltesDetailsService;
+
+//    public ArbreServiceImpl(ArbreRepository arbreRepository, ArbreMapper arbreMapper, ChampService champService) {
+//        this.arbreRepository = arbreRepository;
+//        this.arbreMapper = arbreMapper;
+//        this.champService = champService;
+////        this.recoltesDetailsService = recoltesDetailsService;
+//    }
 
     @Override
     public ArbreDTO save(ArbreDTO arbreDTO) {
@@ -89,7 +102,14 @@ public class ArbreServiceImpl implements ArbreService {
         if (optionalArbre.isEmpty()) {
             throw new ArbreUndefinedException("il n'existe pas une arbre avec ce ID");
         }
-        arbreRepository.delete(optionalArbre.get());
+
+        Arbre arbre = optionalArbre.get();
+        List<RecoltesDetails> recoltesDetailsList = arbre.getRecoltesDetailsList();
+        if (recoltesDetailsList != null && !recoltesDetailsList.isEmpty()) {
+            recoltesDetailsList.forEach(recoltesDetails -> recoltesDetailsService.delete(recoltesDetails.getId()));
+        }
+
+        arbreRepository.delete(arbre);
     }
 
     @Override

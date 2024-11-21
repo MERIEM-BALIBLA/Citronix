@@ -12,27 +12,33 @@ import com.example.citronix.service.RecoltesDetailsService;
 import com.example.citronix.web.errors.ArbreUndefinedException;
 import com.example.citronix.web.errors.RecolteUndefinedException;
 import com.example.citronix.web.errors.RecoltesDetailsUndefinedException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Component
 public class RecoltesDetailsServiceImpl implements RecoltesDetailsService {
 
-    private final RecoltesDetailsRepository recoltesDetailsRepository;
-    private final RecoltesDetailsMapper recoltesDetailsMapper;
-    private final ArbreService arbreService;
-    private final RecolteService recolteService;
+    @Autowired
+    private  RecoltesDetailsRepository recoltesDetailsRepository;
+    @Autowired
+    private  RecoltesDetailsMapper recoltesDetailsMapper;
+    @Autowired
+    private  ArbreService arbreService;
+    @Autowired
+    private  RecolteService recolteService;
 
-    public RecoltesDetailsServiceImpl(RecoltesDetailsRepository recoltesDetailsRepository, RecoltesDetailsMapper recoltesDetailsMapper, ArbreService arbreService, RecolteService recolteService) {
-        this.recoltesDetailsRepository = recoltesDetailsRepository;
-        this.recoltesDetailsMapper = recoltesDetailsMapper;
-        this.arbreService = arbreService;
-        this.recolteService = recolteService;
-    }
+//    public RecoltesDetailsServiceImpl(RecoltesDetailsRepository recoltesDetailsRepository, RecoltesDetailsMapper recoltesDetailsMapper, ArbreService arbreService, RecolteService recolteService) {
+//        this.recoltesDetailsRepository = recoltesDetailsRepository;
+//        this.recoltesDetailsMapper = recoltesDetailsMapper;
+//        this.arbreService = arbreService;
+//        this.recolteService = recolteService;
+//    }
 
     private void validateArbreAndRecolte(RecoltesDetails recoltesDetails) {
         Optional<Arbre> optionalArbre = arbreService.findById(recoltesDetails.getArbre().getId());
@@ -55,6 +61,11 @@ public class RecoltesDetailsServiceImpl implements RecoltesDetailsService {
 
         RecoltesDetails savedRecoltDetails = recoltesDetailsRepository.save(recoltesDetails);
         return recoltesDetailsMapper.toDTO(savedRecoltDetails);
+    }
+
+    @Override
+    public List<RecoltesDetails> saveAll(List<RecoltesDetails> recoltesDetails) {
+        return recoltesDetailsRepository.saveAll(recoltesDetails);
     }
 
     @Override

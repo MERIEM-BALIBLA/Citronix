@@ -1,13 +1,17 @@
 package com.example.citronix.service.impl;
 
+import com.example.citronix.domain.Arbre;
 import com.example.citronix.domain.Champ;
 import com.example.citronix.domain.Ferme;
 import com.example.citronix.mapper.ChampMapper;
 import com.example.citronix.repository.ChampRepository;
+import com.example.citronix.service.ArbreService;
 import com.example.citronix.service.ChampService;
 import com.example.citronix.service.DTO.ChampDTO;
 import com.example.citronix.service.FermeService;
 import com.example.citronix.web.errors.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -19,15 +23,23 @@ import java.util.UUID;
 @Component
 public class ChampServiceImpl implements ChampService {
 
-    private final ChampRepository champRepository;
-    private final ChampMapper champMapper;
-    private final FermeService fermeService;
+    @Autowired
+    private  ChampRepository champRepository;
+    @Autowired
+    private  ChampMapper champMapper;
+    @Autowired
+    private  FermeService fermeService;
+    @Lazy
+    @Autowired
+    private  ArbreService arbreService;
 
-    public ChampServiceImpl(ChampRepository champRepository, ChampMapper champMapper, FermeService fermeService) {
-        this.champRepository = champRepository;
-        this.champMapper = champMapper;
-        this.fermeService = fermeService;
-    }
+//    public ChampServiceImpl(ChampRepository champRepository, ChampMapper champMapper, FermeService fermeService,
+//                            ArbreService arbreService) {
+//        this.champRepository = champRepository;
+//        this.champMapper = champMapper;
+//        this.fermeService = fermeService;
+//        this.arbreService = arbreService;
+//    }
 
     private boolean champSuperficie(Champ champ) {
         double champSuperficie = champ.getSuperficie();
@@ -38,6 +50,11 @@ public class ChampServiceImpl implements ChampService {
     @Override
     public Optional<Champ> findByNom(String nom) {
         return champRepository.findByNom(nom);
+    }
+
+    @Override
+    public Optional<Champ> findByFerme(Ferme ferme) {
+        return champRepository.findByFerme(ferme);
     }
 
     private boolean isSuperficieExceedingLimit(Champ newChamp) {
@@ -68,7 +85,8 @@ public class ChampServiceImpl implements ChampService {
 
         // Verifier l'existence d'un champ avec le même nom
         Optional<Champ> champOptional = findByNom(champDTO.getNom());
-        if (champOptional.isPresent()) {
+        Optional<Champ> optionalChamp = findByFerme(ferme);
+        if (champOptional.isPresent() && optionalChamp.isPresent()) {
             throw new ChampAlreadyExistsException("Un champ avec ce nom existe déjà");
         }
 
@@ -136,41 +154,34 @@ public class ChampServiceImpl implements ChampService {
     }
 
     @Override
-    /*public ChampDTO update(UUID id, ChampDTO champDTO) {
-        Champ champ = champMapper.toEntity(champDTO);
-
-        Optional<Champ> champOptional = findById(id);
-        if (champOptional.isEmpty()) {
-            throw new FermeUndefinedException("il n'exite pas une ferme avec ce ID");
-        }
-
-        Champ existingChamp = champOptional.get();
-
-        existingChamp.setFerme(champ.getFerme());
-        existingChamp.setSuperficie(champ.getSuperficie());
-        champRepository.save(existingChamp);
-
-        return champMapper.toDTO(existingChamp);
-    }*/
-
     public ChampDTO update(UUID id, ChampDTO champDTO) {
-        // Verifier l'existance d'un champ avec ce ID
+
+//        Verifier si la ferme existe deja
         Optional<Champ> champOptional = findById(id);
         if (champOptional.isEmpty()) {
             throw new FermeUndefinedException("il n'existe pas un champ avec ce ID");
         }
 
-        Champ existingChamp = champOptional.get();
-
-        // Verifier s'il existe une ferme avce ce nom
-        if (champDTO.getFerme() != null) {
-            Ferme existingFerme = fermeService.findByNom(champDTO.getFerme())
-                    .orElseThrow(() -> new FermeUndefinedException("La ferme avec ce nom n'existe pas"));
-
-            existingChamp.setFerme(existingFerme);
+//        verifier s'il existe une ferme avec ce nom
+        String ferme_name = champDTO.getFerme();
+        Optional<Ferme> fermeOptional = fermeService.findByNom(ferme_name);
+        if (fermeOptional.isEmpty()) {
+            throw new FermeUndefinedException("Il n'existe pas une ferme avec ce nom");
         }
 
+        Ferme ferme = fermeOptional.get();
+        Champ existingChamp = champOptional.get();
+
+//        Verifier s'il existe un champ avec le meme nom et ferme en meme temps
+        Optional<Champ> champNom = findByNom(champDTO.getNom());
+        Optional<Champ> champFerme = findByFerme(ferme);
+        if (champNom.isPresent() && champFerme.isPresent()) {
+            throw new ChampAlreadyExistsException("Un champ avec ce nom et ferme existe déjà");
+        }
+
+        existingChamp.setFerme(ferme);
         existingChamp.setSuperficie(champDTO.getSuperficie());
+        existingChamp.setNom(champDTO.getNom());
         champRepository.save(existingChamp);
         // Entity -> DTO
         return champMapper.toDTO(existingChamp);
@@ -182,7 +193,12 @@ public class ChampServiceImpl implements ChampService {
         if (champOptional.isEmpty()) {
             throw new ChampUndefinedException("il n'existe pas un champ avec ce ID");
         }
-        champRepository.delete(champOptional.get());
+        Champ champ = champOptional.get();
+        List<Arbre> arbres = champ.getArbres();
+        if (arbres != null && !arbres.isEmpty()) {
+            arbres.forEach(arbre -> arbreService.delete(arbre.getId()));
+        }
+        champRepository.delete(champ);
     }
 
     @Override
@@ -190,4 +206,8 @@ public class ChampServiceImpl implements ChampService {
         return champRepository.findAll(pageable);
     }
 
+    @Override
+    public void deleteAll(List<Champ> champList) {
+        champRepository.deleteAll(champList);
+    }
 }

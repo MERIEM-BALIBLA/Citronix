@@ -4,10 +4,14 @@ import com.example.citronix.domain.Champ;
 import com.example.citronix.domain.Ferme;
 import com.example.citronix.mapper.FermeMapper;
 import com.example.citronix.repository.FermeRepository;
+import com.example.citronix.service.ArbreService;
+import com.example.citronix.service.ChampService;
 import com.example.citronix.service.DTO.FermeDTO;
 import com.example.citronix.service.FermeService;
 import com.example.citronix.web.errors.FermeAlreadyExistsException;
 import com.example.citronix.web.errors.FermeUndefinedException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -18,6 +22,10 @@ import java.util.UUID;
 public class FermeServiceImpl implements FermeService {
     private FermeRepository fermeRepository;
     private FermeMapper fermeMapper;
+
+    @Lazy
+    @Autowired
+    private ChampServiceImpl champService;
 
     public FermeServiceImpl(FermeMapper fermeMapper, FermeRepository fermeRepository) {
         this.fermeMapper = fermeMapper;
@@ -62,6 +70,7 @@ public class FermeServiceImpl implements FermeService {
         existingFerme.setNom(ferme.getNom());
         existingFerme.setLocalisation(ferme.getLocalisation());
         existingFerme.setSuperficie(ferme.getSuperficie());
+        existingFerme.setDate_de_creation(ferme.getDate_de_creation());
 
         fermeRepository.save(existingFerme);
         return fermeMapper.toDTO(existingFerme);
@@ -74,6 +83,12 @@ public class FermeServiceImpl implements FermeService {
             throw new FermeUndefinedException("Ferme avec ce id n'existe pas verifier l'ID!!");
         }
         Ferme ferme = fermeOptional.get();
+        List<Champ> champList = ferme.getChamps();
+
+        if (champList != null && !champList.isEmpty()) {
+            champList.forEach(champ -> champService.delete(champ.getId()));
+        }
+
         fermeRepository.delete(ferme);
     }
 

@@ -9,8 +9,7 @@ import java.util.UUID;
 @Getter
 @Setter
 public class RecoltesDetailsVM {
-    @NotNull(message = "il faut remplir le champ d'arbre")
-//    @NotBlank
+//    @NotNull(message = "il faut remplir le champ d'arbre")
     private UUID arbre;
 
     @NotNull(message = "il faut remplir le champ de recolte")

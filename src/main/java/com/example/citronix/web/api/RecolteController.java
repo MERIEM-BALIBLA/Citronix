@@ -29,11 +29,15 @@ public class RecolteController {
 
 
     @PostMapping("/create")
-    public ResponseEntity<RecolteVM> save(@RequestBody @Valid RecolteVM recolteVM) {
-        RecolteDTO recolteDTO = recolteMapper.toDTO(recolteMapper.toEntityFromVM(recolteVM));
-        RecolteDTO savedRecolte = recolteService.save(recolteDTO);
-        return ResponseEntity.ok(recolteMapper.toVM(recolteMapper.toEntityFromDTO(savedRecolte)));
+    public ResponseEntity<Recolte> createRecolte(@Valid @RequestBody RecolteVM recolteVM) {
+        Recolte createdRecolte = recolteService.save(recolteVM);
+        return ResponseEntity.ok(createdRecolte);
     }
+//    public ResponseEntity<RecolteVM> save(@RequestBody @Valid RecolteVM recolteVM) {
+//        RecolteDTO recolteDTO = recolteMapper.toDTO(recolteMapper.toEntityFromVM(recolteVM));
+//        RecolteDTO savedRecolte = recolteService.save(recolteDTO);
+//        return ResponseEntity.ok(recolteMapper.toVM(recolteMapper.toEntityFromDTO(savedRecolte)));
+//    }
 
     @PutMapping("/{id}")
     public ResponseEntity<RecolteVM> update(@PathVariable UUID id, @RequestBody @Valid RecolteVM recolteVM) {

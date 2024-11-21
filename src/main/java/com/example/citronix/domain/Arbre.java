@@ -4,9 +4,11 @@ import com.example.citronix.domain.enums.ArbreAge;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.domain.Limit;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -22,6 +24,9 @@ public class Arbre {
 
     @ManyToOne
     private Champ champ;
+
+    @OneToMany(mappedBy = "arbre")
+    List<RecoltesDetails> recoltesDetailsList;
 
     public ArbreAge getAge() {
         long nombreDAnneesDepuisPlantation = ChronoUnit.YEARS.between(this.date_de_plantation, LocalDateTime.now());
