@@ -83,7 +83,7 @@ public class ChampServiceImpl implements ChampService {
         }
 
         // Verifier si Ferme contient plus de 10 champs
-        int champCount = champRepository.countByFerme(ferme);
+        int champCount = countByFerme(ferme);
         if (champCount >= 10) {
             throw new TooManyChampsException("Une ferme ne peut pas avoir plus de 10 champs");
         }
@@ -106,46 +106,6 @@ public class ChampServiceImpl implements ChampService {
 
         return champRepository.save(champ);
     }
-
-/*
-    public ChampDTO save(ChampDTO champDTO) {
-        // Verifier si la ferme existe
-        String ferme_name = champDTO.getFerme();
-        Optional<Ferme> fermeOptional = fermeService.findByNom(ferme_name);
-        if (fermeOptional.isEmpty()) {
-            throw new FermeUndefinedException("il n'exite pas une ferme avec ce nom");
-        }
-
-        Ferme ferme = fermeOptional.get();
-
-        // Verifier l'existance d'un champ avce meme le nom
-        Optional<Champ> champOptional = findByNom(champDTO.getNom());
-        if (champOptional.isPresent()) {
-            throw new ChampAlreadyExistsException("Un champ avec ce nom existe déjà");
-        }
-
-        int champCount = champRepository.countByFerme(ferme);
-        if (champCount >= 10) {
-            throw new TooManyChampsException("Une ferme ne peut pas avoir plus de 10 champs");
-        }
-
-        // DTO -> Entity
-        Champ champ = champMapper.toEntity(champDTO);
-
-        champ.setFerme(fermeOptional.get());
-        if (!champSuperficie(champ)) {
-            throw new ChampMustUnderException("La superficier du champ ne doit pas prendre plus de 50% du ferme");
-        }
-
-        boolean status = fermeService.verifierSuperficieDeFerme(ferme);
-        if (!status) {
-            throw new SuperficieException("La somme des superficies des champs doit etre mois de la superfifice de la ferme");
-        }
-
-        Champ champSaved = champRepository.save(champ);
-        return champMapper.toDTO(champSaved);
-    }
-*/
 
     @Override
     public Optional<Champ> findById(UUID id) {
@@ -208,5 +168,9 @@ public class ChampServiceImpl implements ChampService {
     @Override
     public void deleteAll(List<Champ> champList) {
         champRepository.deleteAll(champList);
+    }
+
+    public int countByFerme(Ferme ferme){
+        return champRepository.countByFerme(ferme);
     }
 }

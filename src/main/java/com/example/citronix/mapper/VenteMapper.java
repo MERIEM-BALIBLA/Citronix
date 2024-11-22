@@ -15,7 +15,6 @@ public interface VenteMapper {
     VenteDTO toDTO(Vente vente);
 
     @Mapping(target = "recolte.id", source = "recolteId")
-
     Vente fromVMtoEntity(VenteVM venteVM);
 
     @Mapping(target = "recolteId", source = "recolte.id")

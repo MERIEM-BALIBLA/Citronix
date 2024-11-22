@@ -16,8 +16,6 @@ public interface ChampService {
 
     Optional<Champ> findByNom(String nom);
 
-//    Optional<Champ> findByFerme(Ferme ferme);
-
     Champ save(Champ champ);
 
     Optional<Champ> findById(UUID id);

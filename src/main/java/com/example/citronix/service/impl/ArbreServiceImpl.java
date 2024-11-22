@@ -55,7 +55,7 @@ public class ArbreServiceImpl implements ArbreService {
         Arbre arbre = arbreMapper.toEntityFromDTO(arbreDTO);
         Month month = arbre.getDate_de_plantation().getMonth();
         if (month != Month.MARCH && month != Month.APRIL && month != Month.MAY) {
-            throw new ArbrePlantationMonthException("Les arbres ne peuvent être plantés qu'entre mars et mai.");
+            throw new ArbrePlantationMonthException("Les arbres ne peuvent être plantés qu'entre de mars a mai.");
         }
 
         Arbre savedArbre = arbreRepository.save(arbre);

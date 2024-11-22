@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -60,10 +61,10 @@ public class VenteServiceImpl implements VenteService {
     public void delete(UUID id) {
         Optional<Vente> venteOptional = findById(id);
         Vente vente = venteOptional.get();
-        Recolte recolte = vente.getRecolte();
-        if (recolte != null) {
-            recolteService.delete(recolte.getId());
-        }
+//        Recolte recolte = vente.getRecolte();
+//        if (recolte != null) {
+//            recolteService.delete(recolte.getId());
+//        }
         venteRepository.delete(vente);
     }
 
@@ -81,9 +82,15 @@ public class VenteServiceImpl implements VenteService {
         existingVente.setClientName(vente.getClientName());
         existingVente.setPrix_unitaire(vente.getPrix_unitaire());
 
-        validation(vente);
+//        validation(vente);
 
         venteRepository.save(existingVente);
         return venteMapper.toDTO(existingVente);
     }
+
+//    @Override
+//    public List<Vente> ventes(){
+//
+//    }
+
 }

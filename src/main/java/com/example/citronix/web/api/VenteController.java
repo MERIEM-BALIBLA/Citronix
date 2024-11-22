@@ -34,4 +34,13 @@ public class VenteController {
         VenteDTO venteDTO = venteMapper.toDTO(venteMapper.fromVMtoEntity(venteVM));
         VenteDTO savedVente = venteService.update(id, venteDTO);
         return ResponseEntity.ok(venteMapper.toVM(venteMapper.fromDTOtoEntity(savedVente)));
-    }}
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable UUID id) {
+        venteService.delete(id);
+        return ResponseEntity.ok("Le vente a ete bien suprimé");
+    }
+}
+
+

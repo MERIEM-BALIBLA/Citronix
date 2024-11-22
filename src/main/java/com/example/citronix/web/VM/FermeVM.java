@@ -1,13 +1,10 @@
 package com.example.citronix.web.VM;
 
-import com.example.citronix.service.DTO.ChampDTO;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -31,7 +28,6 @@ public class FermeVM {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime date_de_creation;
 
-    //    -------------------------------------------------------
-    private List<ChampVM> champVMList;
+    // private List<ChampVM> champVMList;
 
 }

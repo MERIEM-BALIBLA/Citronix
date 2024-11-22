@@ -27,4 +27,6 @@ public class VenteVM {
     @NotBlank(message = "empty date de clientName")
     private String clientName;
 
+    private double prevenu;
+
 }

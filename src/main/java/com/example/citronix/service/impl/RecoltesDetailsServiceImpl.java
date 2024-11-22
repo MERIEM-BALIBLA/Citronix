@@ -33,13 +33,6 @@ public class RecoltesDetailsServiceImpl implements RecoltesDetailsService {
     @Autowired
     private  RecolteService recolteService;
 
-//    public RecoltesDetailsServiceImpl(RecoltesDetailsRepository recoltesDetailsRepository, RecoltesDetailsMapper recoltesDetailsMapper, ArbreService arbreService, RecolteService recolteService) {
-//        this.recoltesDetailsRepository = recoltesDetailsRepository;
-//        this.recoltesDetailsMapper = recoltesDetailsMapper;
-//        this.arbreService = arbreService;
-//        this.recolteService = recolteService;
-//    }
-
     private void validateArbreAndRecolte(RecoltesDetails recoltesDetails) {
         Optional<Arbre> optionalArbre = arbreService.findById(recoltesDetails.getArbre().getId());
         if (optionalArbre.isEmpty()) {
