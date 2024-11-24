@@ -19,4 +19,7 @@ public interface VenteMapper {
 
     @Mapping(target = "recolteId", source = "recolte.id")
     VenteVM toVM(Vente vente);
+
+    VenteDTO fromVMtoDTO(VenteVM venteVM);
+    VenteVM fromDTOtoVM(VenteDTO venteDTO);
 }

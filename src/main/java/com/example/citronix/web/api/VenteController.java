@@ -1,5 +1,6 @@
 package com.example.citronix.web.api;
 
+import com.example.citronix.domain.Vente;
 import com.example.citronix.mapper.VenteMapper;
 import com.example.citronix.service.DTO.VenteDTO;
 import com.example.citronix.service.VenteService;
@@ -24,9 +25,10 @@ public class VenteController {
 
     @PostMapping("/create")
     public ResponseEntity<VenteVM> save(@RequestBody @Valid VenteVM venteVM) {
-        VenteDTO venteDTO = venteMapper.toDTO(venteMapper.fromVMtoEntity(venteVM));
-        VenteDTO savedVente = venteService.save(venteDTO);
-        return ResponseEntity.ok(venteMapper.toVM(venteMapper.fromDTOtoEntity(savedVente)));
+        VenteDTO venteDTO = venteMapper.fromVMtoDTO(venteVM);
+        VenteDTO venteDTO1 = venteService.save(venteDTO);
+        VenteVM venteSaved = venteMapper.fromDTOtoVM(venteDTO1);
+        return ResponseEntity.ok(venteSaved);
     }
 
     @PutMapping("/{id}")

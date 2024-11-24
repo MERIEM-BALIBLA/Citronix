@@ -10,6 +10,7 @@ import java.util.UUID;
 @Data
 @Getter
 @Setter
+@AllArgsConstructor
 public class VenteDTO {
 
     @NotNull(message = "La date de vente ne doit pas être null")
@@ -22,4 +23,6 @@ public class VenteDTO {
 
     @NotNull(message = "Le nom du client ne doit pas être null")
     private String clientName;
+
+    private double prevenu;
 }

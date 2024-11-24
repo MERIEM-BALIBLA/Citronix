@@ -48,14 +48,37 @@ public class VenteServiceImpl implements VenteService {
             throw new VenteAlreadyExistException("Il existe déjà une vente pour ce recolte");
         }
     }
+
     @Override
     public VenteDTO save(VenteDTO venteDTO) {
+        // Verify recolte exists
+        Recolte optionalRecolte = recolteService.findById(venteDTO.getRecolteId())
+                .orElseThrow(() -> new RuntimeException("Recolte not found"));
+
+        // Validate critical fields
+        if (venteDTO.getPrix_unitaire() == null) {
+            throw new IllegalStateException("Prix unitaire cannot be null");
+        }
+
+        if (optionalRecolte.getQuatiteTotale() == null) {
+            throw new IllegalStateException("Quantité totale cannot be null");
+        }
+
         Vente vente = venteMapper.fromDTOtoEntity(venteDTO);
+
+        // Set the fetched recolte
+        vente.setRecolte(optionalRecolte);
+
+        // Save the vente
         validation(vente);
         Vente savedVente = venteRepository.save(vente);
-        return venteMapper.toDTO(savedVente);
-    }
 
+        // Convert to VM and set prevenu
+        VenteDTO venteDTO1 = venteMapper.toDTO(savedVente);
+        venteDTO1.setPrevenu(savedVente.calculRevenu());
+
+        return venteDTO1;
+    }
 
     @Override
     public void delete(UUID id) {

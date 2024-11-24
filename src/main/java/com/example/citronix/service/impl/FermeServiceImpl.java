@@ -134,4 +134,9 @@ public class FermeServiceImpl implements FermeService {
         return fermeRepository.findOne(example)
                 .orElseThrow(() -> new FermeUndefinedException("No farm found with the given criteria"));
     }
+
+    @Override
+    public Optional<Ferme> findById(UUID id){
+        return fermeRepository.findById(id);
+    }
 }

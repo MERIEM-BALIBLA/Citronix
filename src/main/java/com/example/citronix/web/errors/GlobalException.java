@@ -106,7 +106,9 @@ public class GlobalException {
     }
 
     @ExceptionHandler(VenteAlreadyExistException.class)
-    public String venteAlreadyExistException(VenteUndefinedException ex) {
+    public String venteAlreadyExistException(VenteAlreadyExistException ex) {
         return ex.getMessage();
     }
+
+
 }

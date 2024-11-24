@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,14 +25,14 @@ import java.util.UUID;
 public class ChampServiceImpl implements ChampService {
 
     @Autowired
-    private  ChampRepository champRepository;
+    private ChampRepository champRepository;
     @Autowired
-    private  ChampMapper champMapper;
+    private ChampMapper champMapper;
     @Autowired
-    private  FermeService fermeService;
+    private FermeService fermeService;
     @Lazy
     @Autowired
-    private  ArbreService arbreService;
+    private ArbreService arbreService;
 
 
     @Override
@@ -39,17 +40,18 @@ public class ChampServiceImpl implements ChampService {
         return champRepository.findByNom(nom);
     }
 
-//    @Override
-//    public Optional<Champ> findByFerme(Ferme ferme) {
-//        return champRepository.findByFerme(ferme);
-//    }
 
-    private boolean isSuperficieExceedingLimit(Champ newChamp) {
+    public boolean isSuperficieExceedingLimit(Champ newChamp) {
         Ferme ferme = newChamp.getFerme();
 
         double fermeSuperficie = ferme.getSuperficie();
 
+//        List<Champ> champs = ferme.getChamps();
+        // Ensure champs list is not null
         List<Champ> champs = ferme.getChamps();
+        if (champs == null) {
+            champs = new ArrayList<>();
+        }
 
         double totalExistingSuperficie = champs.stream()
                 .mapToDouble(Champ::getSuperficie)
@@ -59,10 +61,43 @@ public class ChampServiceImpl implements ChampService {
         return totalSuperficie >= fermeSuperficie;
     }
 
-    private boolean champSuperficie(Champ champ, Ferme ferme) {
+    public boolean champSuperficie(Champ champ, Ferme ferme) {
         double champSuperficie = champ.getSuperficie();
         double fermeSuperficie = ferme.getSuperficie();
         return champSuperficie >= 0.5 * fermeSuperficie;
+    }
+
+    public void validateChampName(String champNom) {
+        if (findByNom(champNom).isPresent()) {
+            throw new ChampAlreadyExistsException("Un champ avec ce nom existe déjà");
+        }
+    }
+
+    public void validateChampCount(Ferme ferme) {
+        int champCount = countByFerme(ferme);
+        if (champCount >= 10) {
+            throw new TooManyChampsException("Une ferme ne peut pas avoir plus de 10 champs");
+        }
+    }
+
+    public void validateChampSuperficie(Champ champ, Ferme ferme) {
+        if (champSuperficie(champ, ferme)) {
+            throw new ChampMustUnderException("La superficie du champ ne doit pas prendre plus de 50% du ferme");
+        }
+    }
+
+    public void validateMinimumSuperficie(Champ champ) {
+        if (champ.getSuperficie() < 1000) {
+            throw new SuperficieException("La superficie du champ doit etre soit 1000 ou plus");
+        }
+    }
+
+    public void validateTotalSuperficie(Champ champ) {
+        if (isSuperficieExceedingLimit(champ)) {
+            throw new SuperficieException(
+                    "La somme des superficies des champs doit être inférieure à la superficie de la ferme"
+            );
+        }
     }
 
     @Override
@@ -77,32 +112,37 @@ public class ChampServiceImpl implements ChampService {
         Ferme ferme = fermeOptional.get();
 
         // Verifier l'existence d'un champ avec le même nom
-        Optional<Champ> champOptional = findByNom(champ.getNom());
+        /*Optional<Champ> champOptional = findByNom(champ.getNom());
         if (champOptional.isPresent()) {
             throw new ChampAlreadyExistsException("Un champ avec ce nom existe déjà");
-        }
+        }*/
+        validateChampName(champ.getNom());
 
         // Verifier si Ferme contient plus de 10 champs
-        int champCount = countByFerme(ferme);
+        /*int champCount = countByFerme(ferme);
         if (champCount >= 10) {
             throw new TooManyChampsException("Une ferme ne peut pas avoir plus de 10 champs");
-        }
+        }*/
+        validateChampCount(ferme);
 
         // Verifier si superficie du champ prend 50% de la ferme
-        if (champSuperficie(champ, ferme)) {
+       /* if (champSuperficie(champ, ferme)) {
             throw new ChampMustUnderException("La superficie du champ ne doit pas prendre plus de 50% du ferme");
-        }
+        }*/
+        validateChampSuperficie(champ, ferme);
 
-        if(champ.getSuperficie() < 1000){
+        validateMinimumSuperficie(champ);
+        /*if (champ.getSuperficie() < 1000) {
             throw new SuperficieException("La superficie du champ doit etre soit 1000 ou plus");
-        }
+        }*/
 
         champ.setFerme(ferme);
 
         // Verifier si la somme des superficie des champs > a la superficie de l'arbre
-        if (isSuperficieExceedingLimit(champ)) {
+        /*if (isSuperficieExceedingLimit(champ)) {
             throw new SuperficieException("La somme des superficies des champs doit être inférieure à la superficie de la ferme");
-        }
+        }*/
+        validateTotalSuperficie(champ);
 
         return champRepository.save(champ);
     }
@@ -131,9 +171,8 @@ public class ChampServiceImpl implements ChampService {
         Ferme ferme = fermeOptional.get();
         Champ existingChamp = champOptional.get();
 
-        // Verifier s'il existe un champ avec le meme nom et ferme en meme temps
+        // Verifier s'il existe un champ avec le meme nom
         Optional<Champ> champNom = findByNom(champDTO.getNom());
-        // Optional<Champ> champFerme = findByFerme(ferme);
         if (champNom.isPresent()) {
             throw new ChampAlreadyExistsException("Un champ avec ce nom et ferme existe déjà");
         }
@@ -170,7 +209,7 @@ public class ChampServiceImpl implements ChampService {
         champRepository.deleteAll(champList);
     }
 
-    public int countByFerme(Ferme ferme){
+    public int countByFerme(Ferme ferme) {
         return champRepository.countByFerme(ferme);
     }
 }

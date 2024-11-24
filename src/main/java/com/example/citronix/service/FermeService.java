@@ -28,4 +28,6 @@ public interface FermeService {
     Ferme getFermeDatails(String nom);
 
     Ferme search(String name, String location, Double area);
+
+    Optional<Ferme> findById(UUID id);
 }
