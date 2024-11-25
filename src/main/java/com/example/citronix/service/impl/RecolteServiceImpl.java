@@ -128,9 +128,9 @@ public class RecolteServiceImpl implements RecolteService {
         }
         Recolte recolte = optionalRecolte.get();
 
-        if (recolte.getRecoltesDetails() != null && !recolte.getRecoltesDetails().isEmpty()) {
-            recoltesDetailsRepository.deleteAll(recolte.getRecoltesDetails());
-        }
+//        if (recolte.getRecoltesDetails() != null && !recolte.getRecoltesDetails().isEmpty()) {
+//            recoltesDetailsRepository.deleteAll(recolte.getRecoltesDetails());
+//        }
 
         recolteRepository.delete(recolte);
     }

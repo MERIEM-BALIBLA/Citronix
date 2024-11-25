@@ -5,6 +5,7 @@ import com.example.citronix.domain.Champ;
 import com.example.citronix.domain.RecoltesDetails;
 import com.example.citronix.mapper.ArbreMapper;
 import com.example.citronix.repository.ArbreRepository;
+import com.example.citronix.repository.RecoltesDetailsRepository;
 import com.example.citronix.service.ArbreService;
 import com.example.citronix.service.ChampService;
 import com.example.citronix.service.DTO.ArbreDTO;
@@ -13,6 +14,7 @@ import com.example.citronix.web.errors.ArbrePlantationMonthException;
 import com.example.citronix.web.errors.ArbreUndefinedException;
 import com.example.citronix.web.errors.ChampUndefinedException;
 import com.example.citronix.web.errors.MaximumArbreForFermeException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
@@ -32,6 +34,8 @@ public class ArbreServiceImpl implements ArbreService {
     private ArbreMapper arbreMapper;
     @Autowired
     private ChampService champService;
+    @Autowired
+    private RecoltesDetailsRepository recoltesDetailsRepository;
 
     @Lazy
     @Autowired
@@ -90,21 +94,25 @@ public class ArbreServiceImpl implements ArbreService {
         return arbreMapper.toDTO(updatedArbre);
     }
 
+    @Transactional
     @Override
     public void delete(UUID id) {
         Optional<Arbre> optionalArbre = findById(id);
         if (optionalArbre.isEmpty()) {
-            throw new ArbreUndefinedException("il n'existe pas une arbre avec ce ID");
+            throw new ArbreUndefinedException("Il n'existe pas un arbre avec ce ID");
         }
-
         Arbre arbre = optionalArbre.get();
+
+        // Supprimer les RecoltesDetails associés à cet arbre
         List<RecoltesDetails> recoltesDetailsList = arbre.getRecoltesDetailsList();
         if (recoltesDetailsList != null && !recoltesDetailsList.isEmpty()) {
             recoltesDetailsList.forEach(recoltesDetails -> recoltesDetailsService.delete(recoltesDetails.getId()));
         }
 
+        // Supprimer l'Arbre
         arbreRepository.delete(arbre);
     }
+
 
     @Override
     public Page<Arbre> findAll(Pageable pageable) {
