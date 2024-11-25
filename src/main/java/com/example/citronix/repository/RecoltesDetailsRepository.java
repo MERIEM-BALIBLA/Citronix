@@ -8,4 +8,5 @@ import java.util.UUID;
 
 public interface RecoltesDetailsRepository extends JpaRepository<RecoltesDetails, UUID> {
     Optional<RecoltesDetails> findById(UUID id);
+    void deleteByArbreId(UUID id);
 }

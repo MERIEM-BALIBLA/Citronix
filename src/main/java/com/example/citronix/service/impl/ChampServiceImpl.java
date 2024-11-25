@@ -10,6 +10,7 @@ import com.example.citronix.service.ChampService;
 import com.example.citronix.service.DTO.ChampDTO;
 import com.example.citronix.service.FermeService;
 import com.example.citronix.web.errors.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
@@ -46,8 +47,6 @@ public class ChampServiceImpl implements ChampService {
 
         double fermeSuperficie = ferme.getSuperficie();
 
-//        List<Champ> champs = ferme.getChamps();
-        // Ensure champs list is not null
         List<Champ> champs = ferme.getChamps();
         if (champs == null) {
             champs = new ArrayList<>();
@@ -168,6 +167,7 @@ public class ChampServiceImpl implements ChampService {
     }
 
     @Override
+    @Transactional
     public void delete(UUID id) {
         Optional<Champ> champOptional = findById(id);
         if (champOptional.isEmpty()) {

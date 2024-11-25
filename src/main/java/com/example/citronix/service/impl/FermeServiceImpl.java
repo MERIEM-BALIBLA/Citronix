@@ -9,6 +9,7 @@ import com.example.citronix.service.FermeService;
 import com.example.citronix.web.errors.DateOfFermeException;
 import com.example.citronix.web.errors.FermeAlreadyExistsException;
 import com.example.citronix.web.errors.FermeUndefinedException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Example;
@@ -80,6 +81,7 @@ public class FermeServiceImpl implements FermeService {
     }
 
     @Override
+    @Transactional
     public void delete(UUID id) {
         Optional<Ferme> fermeOptional = fermeRepository.findById(id);
         if (fermeOptional.isEmpty()) {

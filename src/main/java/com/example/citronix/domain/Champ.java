@@ -23,6 +23,7 @@ public class Champ {
     private double superficie;
 
     @OneToMany(mappedBy = "champ", fetch = FetchType.EAGER)
+
     List<Arbre> arbres;
 
 }
