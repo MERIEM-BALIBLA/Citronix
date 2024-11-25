@@ -5,8 +5,10 @@ import com.example.citronix.mapper.FermeMapper;
 import com.example.citronix.service.DTO.FermeDTO;
 import com.example.citronix.service.FermeService;
 import com.example.citronix.web.VM.FermeVM;
+import com.example.citronix.web.errors.FermeUndefinedException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,9 +26,7 @@ public class FermeController {
 
     @PostMapping("/create")
     public ResponseEntity<FermeVM> save(@RequestBody @Valid FermeVM fermeVM) {
-//        FermeDTO fermeDTO = fermeMapper.toDTO(fermeMapper.toEntity(fermeVM));
         Ferme ferme = fermeMapper.toEntity(fermeVM);
-//        FermeDTO ferme = fermeService.save(fe);
         Ferme savedFerme = fermeService.save(ferme);
         return ResponseEntity.ok(fermeMapper.toVM(savedFerme));
     }
@@ -59,11 +59,21 @@ public class FermeController {
     }
 
     @GetMapping("/search")
-    public Ferme searchFerme(
+    public ResponseEntity<String> searchFerme(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String location,
             @RequestParam(required = false) Double area) {
-        return fermeService.search(name, location, area);
+
+        try {
+            Ferme result = fermeService.search(name, location, area);
+            FermeVM fermeVM = fermeMapper.toVM(result);
+            return ResponseEntity.ok(fermeVM.getNom());
+        } catch (FermeUndefinedException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
+
 
 }

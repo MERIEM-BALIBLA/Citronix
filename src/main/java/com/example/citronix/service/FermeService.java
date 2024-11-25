@@ -21,10 +21,6 @@ public interface FermeService {
 
     void delete(UUID id);
 
-//    List<Ferme> getFieldsGraterThan();
-
-//    boolean verifierSuperficieDeFerme(Ferme ferme);
-
     Ferme getFermeDatails(String nom);
 
     Ferme search(String name, String location, Double area);

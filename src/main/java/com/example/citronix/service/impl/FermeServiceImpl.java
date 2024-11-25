@@ -22,17 +22,15 @@ import java.util.UUID;
 
 @Component
 public class FermeServiceImpl implements FermeService {
+    @Autowired
     private FermeRepository fermeRepository;
+
+    @Autowired
     private FermeMapper fermeMapper;
 
     @Lazy
     @Autowired
     private ChampServiceImpl champService;
-
-    public FermeServiceImpl(FermeMapper fermeMapper, FermeRepository fermeRepository) {
-        this.fermeMapper = fermeMapper;
-        this.fermeRepository = fermeRepository;
-    }
 
     @Override
     public Optional<Ferme> findByNom(String nom) {

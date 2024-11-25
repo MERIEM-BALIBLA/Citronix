@@ -22,6 +22,6 @@ public class Ferme {
     private Double superficie;
     private LocalDateTime date_de_creation;
 
-    @OneToMany(mappedBy = "ferme")
+    @OneToMany(mappedBy = "ferme", fetch = FetchType.EAGER)
     List<Champ> champs;
 }

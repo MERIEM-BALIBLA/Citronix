@@ -12,7 +12,10 @@ import com.example.citronix.web.errors.VenteAlreadyExistException;
 import com.example.citronix.web.errors.VenteUndefinedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -111,9 +114,19 @@ public class VenteServiceImpl implements VenteService {
         return venteMapper.toDTO(existingVente);
     }
 
-//    @Override
-//    public List<Vente> ventes(){
-//
-//    }
+    @Override
+    public Page<VenteDTO> findAll(Pageable pageable) {
+
+        Page<Vente> venteRepositoryAll = venteRepository.findAll(pageable);
+
+        Page<VenteDTO> venteDTOS = venteRepositoryAll.map(venteMapper::toDTO);
+
+        venteDTOS.forEach(venteDTO -> {
+            venteDTO.setPrevenu(venteDTO.getPrix_unitaire());
+        });
+
+        return venteDTOS;
+    }
+
 
 }

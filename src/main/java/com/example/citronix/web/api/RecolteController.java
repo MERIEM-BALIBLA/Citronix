@@ -52,7 +52,7 @@ public class RecolteController {
         return ResponseEntity.ok("Le récolte a été bien supprimé");
     }
 
-    @GetMapping
+    @GetMapping("/list")
     public Page<Recolte> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,

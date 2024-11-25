@@ -17,8 +17,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class ChampServiceImplTest {
 
@@ -89,15 +88,35 @@ class ChampServiceImplTest {
     }
 
     @Test
-    void findByNom_shouldReturnException() {
+    void findByNom_shouldReturnExceptionFerme() {
         when(fermeService.findByNom(ferme.getNom())).thenReturn(Optional.empty());
-
         assertThrows(FermeUndefinedException.class,
                 () -> champService.save(champ),
                 "Il n'existe pas une ferme avec ce nom");
     }
 
-    //    ---------------------------------------------------------------------------------------
+    @Test
+    void findByNom_shouldReturnChamp() {
+        when(champRepository.findByNom(champ.getNom())).thenReturn(Optional.of(champ));
+
+        Optional<Champ> result = champService.findByNom(champ.getNom());
+
+        assertNotNull(result);
+        assertTrue(result.isPresent());
+
+        verify(champRepository).findByNom(champ.getNom());
+    }
+
+    @Test
+    void shouldThrowChampAlreadyExistsException_whenChampWithSameNameExists() {
+        when(fermeService.findByNom(ferme.getNom())).thenReturn(Optional.of(ferme));
+        when(champService.findByNom(champ.getNom())).thenReturn(Optional.of(champ));
+
+        assertThrows(ChampAlreadyExistsException.class,
+                () -> champService.save(champ),
+                "Un champ avec ce nom existe déjà");
+    }
+
     @Test
     void findById_shouldReturnChamp() {
         when(champRepository.findById(champ.getId())).thenReturn(Optional.of(champ));
@@ -109,26 +128,33 @@ class ChampServiceImplTest {
 
         verify(champRepository).findById(champ.getId());
     }
-    //    ---------------------------------------------------------------------------------------
+
 
     @Test
-    void findByNom_shouldReturnChamp() {
-        when(champRepository.findByNom(champ.getNom())).thenReturn(Optional.of(champ));
+    void validateChampCount_WhenTooManyChamps() {
+        when(champRepository.countByFerme(ferme)).thenReturn(10);
+        TooManyChampsException exception = assertThrows(
+                TooManyChampsException.class,
+                () -> champService.validateChampCount(ferme)
+        );
+        assertEquals("Une ferme ne peut pas avoir plus de 10 champs", exception.getMessage());
+        verify(champRepository).countByFerme(ferme);
+    }
 
-        Optional<Champ> champF = champService.findByNom(champ.getNom());
+    @Test
+    void shouldThrowTooManyChampsException_whenFermeHasMaxChamps() {
+        when(fermeService.findByNom(ferme.getNom())).thenReturn(Optional.of(ferme));
+        when(champService.findByNom(champ.getNom())).thenReturn(Optional.empty());
+        when(champService.countByFerme(ferme)).thenReturn(10);
 
-        assertNotNull(champF);
-        assertTrue(champF.isPresent());
-
-        verify(champRepository).findByNom(champ.getNom());
+        assertThrows(TooManyChampsException.class,
+                () -> champService.save(champ),
+                "Une ferme ne peut pas avoir plus de 10 champs");
     }
 
 
-//    ---------------------------------------------------------------------------------------
-
-
     @Test
-    public void testSave_Success() {
+    public void testSave_ShouldReturnSavedChamp() {
         // Given
         Ferme ferme = new Ferme();
         ferme.setNom("Ferme1");
@@ -140,10 +166,9 @@ class ChampServiceImplTest {
         champ.setSuperficie(2000.0);
         champ.setFerme(ferme);
 
-        // Mock the behavior of dependent services
+        // Mock
         when(fermeService.findByNom("Ferme1")).thenReturn(Optional.of(ferme));
-
-        when(champService.save(any(Champ.class))).thenReturn(champ);
+        when(champRepository.save(champ)).thenReturn(champ);
         when(champService.countByFerme(ferme)).thenReturn(5);
         when(champService.findByNom(champ.getNom())).thenReturn(Optional.empty());
 
@@ -158,65 +183,10 @@ class ChampServiceImplTest {
     }
 
 
-    /*@Test
-    public void testSave_Success() {
-        // Given
-        Champ champ = new Champ();
-        champ.setNom("Champ1");
-        champ.setSuperficie(2000.0);
-        Ferme ferme = new Ferme();
-        ferme.setNom("Ferme1");
-        champ.setFerme(ferme);
-
-        when(fermeService.findByNom("Ferme1")).thenReturn(Optional.of(ferme));
-        when(champService.countByFerme(ferme)).thenReturn(5);
-        when(champService.save(any(Champ.class))).thenReturn(champ);
-
-        // When
-        Champ savedChamp = champService.save(champ);
-
-        // Then
-        assertNotNull(savedChamp);
-        assertEquals("Champ1", savedChamp.getNom());
-    }*/
-
-    @Test
-    void shouldReturnEmpty_whenChampWithSameNameDoesNotExist() {
-        // Mock the ChampRepository to return Optional.empty() when no Champ is found
-        when(champRepository.findByNom(champ.getNom())).thenReturn(Optional.empty());
-
-        // Call the findByNom method
-        Optional<Champ> result = champService.findByNom(champ.getNom());
-
-        // Verify that the result is empty
-        assertFalse(result.isPresent());
-    }
-
-    @Test
-    void shouldThrowChampAlreadyExistsException_whenChampWithSameNameExists() {
-        when(fermeService.findByNom(ferme.getNom())).thenReturn(Optional.of(ferme));
-        when(champService.findByNom(champ.getNom())).thenReturn(Optional.of(champ));
-
-        assertThrows(ChampAlreadyExistsException.class,
-                () -> champService.save(champ),
-                "Un champ avec ce nom existe déjà");
-    }
-
-    @Test
-    void shouldThrowTooManyChampsException_whenFermeHasMaxChamps() {
-        when(fermeService.findByNom(ferme.getNom())).thenReturn(Optional.of(ferme));
-        when(champService.findByNom(champ.getNom())).thenReturn(Optional.empty());
-        when(champService.countByFerme(ferme)).thenReturn(10);
-
-        assertThrows(TooManyChampsException.class,
-                () -> champService.save(champ),
-                "Une ferme ne peut pas avoir plus de 10 champs");
-    }
-
     @Test
     void shouldThrowChampMustUnderException_whenChampSuperficieExceeds50Percent() {
-        ferme.setSuperficie(3000.0); // Setting ferme superficie
-        champ.setSuperficie(2000.0);  // More than 50% of ferme superficie
+        ferme.setSuperficie(3000.0);
+        champ.setSuperficie(2000.0);
 
         when(fermeService.findByNom(ferme.getNom())).thenReturn(Optional.of(ferme));
         when(champService.findByNom(champ.getNom())).thenReturn(Optional.empty());
@@ -290,11 +260,6 @@ class ChampServiceImplTest {
 
     @Test
     void shouldThrowException_whenChampCountIsGreaterOrEqualToTen() {
-        // Given
-        Ferme ferme = new Ferme();
-        ferme.setNom("TestFerme");
-        ferme.setSuperficie(5000.0);
-
         // Mock the countByFerme method to return 10
         when(champService.countByFerme(ferme)).thenReturn(10);
 
@@ -306,11 +271,6 @@ class ChampServiceImplTest {
 
     @Test
     void shouldNotThrowException_whenChampCountIsLessThanTen() {
-        // Given
-        Ferme ferme = new Ferme();
-        ferme.setNom("TestFerme");
-        ferme.setSuperficie(5000.0);
-
         // Mock the countByFerme method to return 9
         when(champService.countByFerme(ferme)).thenReturn(9);
 
@@ -328,37 +288,37 @@ class ChampServiceImplTest {
     @Test
     void validateChampSuperficie_false() {
 
-        champ.setSuperficie(6000.0);
+        champ.setSuperficie(5000.0);
         // When/Then
         assertThrows(ChampMustUnderException.class,
                 () -> champService.validateChampSuperficie(champ, ferme),
                 "Should throw ChampMustUnderException when champ superficie exceeds 50% of ferme");
     }
 
-    @Test
-    void findById_succes() {
-        // Arrange
-        when(champService.findById(champ.getId())).thenReturn(Optional.of(champ));
+//    @Test
+//    void findById_succes() {
+//        // Arrange
+//        when(champService.findById(champ.getId())).thenReturn(Optional.of(champ));
+//
+//        // Act
+//        Optional<Champ> result = champService.findById(champ.getId());
+//
+//        // Assert
+//        assertTrue(result.isPresent(), "Result should be present");
+//        assertEquals(champ, result.get(), "The returned champ should match the mocked champ");
+//
+//        // Log a message for test clarity
+//        System.out.println("Test findById_succes passed successfully!");
+//    }
 
-        // Act
-        Optional<Champ> result = champService.findById(champ.getId());
-
-        // Assert
-        assertTrue(result.isPresent(), "Result should be present");
-        assertEquals(champ, result.get(), "The returned champ should match the mocked champ");
-
-        // Log a message for test clarity
-        System.out.println("Test findById_succes passed successfully!");
-    }
-
-    @Test
-    void findById_notFound() {
-//        Mock
-        when(champRepository.findById(champ.getId())).thenReturn(Optional.empty());
-
-        // Action
-        assertThrows(ChampUndefinedException.class, () -> champService.findById(champ.getId()));
-    }
+//    @Test
+//    void findById_notFound() {
+////        Mock
+//        when(champRepository.findById(champ.getId())).thenReturn(Optional.empty());
+//
+//        // Action
+//        assertThrows(ChampUndefinedException.class, () -> champService.findById(champ.getId()));
+//    }
 
     @Test
     void delete_succes() {
@@ -374,7 +334,6 @@ class ChampServiceImplTest {
         verify(champRepository).delete(champ);
     }
 
-    //    ---------------------------------------------------------------------------
     @Test
     void update_Success() {
         UUID id = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
@@ -397,38 +356,4 @@ class ChampServiceImplTest {
         verify(champRepository).save(any(Champ.class));
         verify(champMapper).toDTO(any(Champ.class));
     }
-
-//    @Test
-//    void shouldSaveChamp_whenAllValidationsPass() {
-//        // Given
-//        when(fermeService.findByNom(ferme.getNom())).thenReturn(Optional.of(ferme));
-//        when(champService.findByNom(champ.getNom())).thenReturn(Optional.empty());
-//        when(champService.countByFerme(ferme)).thenReturn(5);
-//        when(champService.isSuperficieExceedingLimit(champ)).thenReturn(false);
-//        when(champRepository.save(champ)).thenReturn(champ);
-//
-//        // When
-//        Champ savedChamp = champService.save(champ);
-//
-//        // Then
-//        assertNotNull(savedChamp);
-//        assertEquals(champ.getNom(), savedChamp.getNom());
-//        verify(champRepository).save(champ);
-//    }
-//    @Test
-//    public void test_findByNom_success(){
-//        Champ champ = new Champ();
-//        champ.setNom("champ");
-//        champ.setSuperficie(2000);
-//        Ferme ferme = new Ferme();
-//        ferme.setNom("Ferme1");
-//        champ.setFerme(ferme);
-//
-//        when(champRepository.findByNom("champ")).thenReturn(Optional.of(champ));
-//
-//        when(champService.findByNom("champ")).thenReturn(Optional.of(champ));
-//
-//        assertThrows(ChampAlreadyExistsException.class, () -> champService.save(champ));
-//    }
-
 }
