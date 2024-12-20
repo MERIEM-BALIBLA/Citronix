@@ -47,8 +47,6 @@ public class ChampServiceImpl implements ChampService {
 
         double fermeSuperficie = ferme.getSuperficie();
 
-//        List<Champ> champs = ferme.getChamps();
-        // Ensure champs list is not null
         List<Champ> champs = ferme.getChamps();
         if (champs == null) {
             champs = new ArrayList<>();
