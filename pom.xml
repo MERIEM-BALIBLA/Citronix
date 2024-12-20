@@ -30,7 +30,7 @@
         <java.version>17</java.version>
         <sonar.projectKey>citronix</sonar.projectKey>
         <sonar.host.url>http://host.docker.internal:9000</sonar.host.url>
-        <sonar.token>sqp_6a65fc32d65c05ec47b72a867f453fdc338ce3fb</sonar.token>
+        <sonar.token>sqp_19cac94acb4102fcb9e7e5c3be74101e60924067</sonar.token>
     </properties>
     <dependencies>
         <dependency>
