@@ -16,6 +16,7 @@ import com.example.citronix.web.VM.RecolteVM;
 import com.example.citronix.web.errors.ChampUndefinedException;
 import com.example.citronix.web.errors.DuplicateRecolteException;
 import com.example.citronix.web.errors.RecolteUndefinedException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
@@ -60,9 +61,9 @@ public class RecolteServiceImpl implements RecolteService {
         // Save the Recolte
         Recolte savedRecolte = recolteRepository.save(recolte);
 
-        // Filter Arbres by age and create RecoltesDetails
+        // Filter Arbres by age + create recolte details
         List<RecoltesDetails> recoltesDetailsList = champ.getArbres().stream()
-                .filter(arbre -> arbre.getAge() < 20) // Include only Arbres under 20 years old
+                .filter(arbre -> arbre.getAge() < 20)
                 .map(arbre -> {
                     RecoltesDetails detail = new RecoltesDetails();
                     detail.setArbre(arbre);
@@ -81,6 +82,7 @@ public class RecolteServiceImpl implements RecolteService {
                 .sum();
         savedRecolte.setQuatiteTotale(totalQuantity);
         savedRecolte.setRecoltesDetails(recoltesDetailsList);
+
 
         // Update and return the Recolte
         return recolteRepository.save(savedRecolte);
@@ -119,6 +121,7 @@ public class RecolteServiceImpl implements RecolteService {
         return recolteMapper.toDTO(updatedRecolte);
     }
 
+    @Transactional
     @Override
     public void delete(UUID id) {
 
@@ -128,9 +131,9 @@ public class RecolteServiceImpl implements RecolteService {
         }
         Recolte recolte = optionalRecolte.get();
 
-//        if (recolte.getRecoltesDetails() != null && !recolte.getRecoltesDetails().isEmpty()) {
-//            recoltesDetailsRepository.deleteAll(recolte.getRecoltesDetails());
-//        }
+        if (recolte.getRecoltesDetails() != null && !recolte.getRecoltesDetails().isEmpty()) {
+            recoltesDetailsRepository.deleteAll(recolte.getRecoltesDetails());
+        }
 
         recolteRepository.delete(recolte);
     }

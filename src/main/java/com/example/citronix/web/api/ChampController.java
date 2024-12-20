@@ -1,17 +1,14 @@
 package com.example.citronix.web.api;
 
 import com.example.citronix.domain.Champ;
-import com.example.citronix.domain.RecoltesDetails;
 import com.example.citronix.mapper.ChampMapper;
 import com.example.citronix.service.ChampService;
 import com.example.citronix.service.DTO.ChampDTO;
 import com.example.citronix.web.VM.ChampVM;
-import com.example.citronix.web.VM.RecoltesDetailsVM;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,8 +28,6 @@ public class ChampController {
 
     @PostMapping("/create")
     public ResponseEntity<ChampVM> save(@RequestBody @Valid ChampVM champVM) {
-//        ChampDTO champDTO = champMapper.toDTO(champMapper.toEntity(champVM));
-//        ChampDTO savedChamp = champService.save(champDTO);
         Champ champ = champMapper.toEntity(champVM);
         Champ savedChamp = champService.save(champ);
         return ResponseEntity.ok(champMapper.toVM(champ));
@@ -52,7 +47,7 @@ public class ChampController {
     }
 
     @GetMapping("/list")
-    public Page<ChampVM> getAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
+    public Page<ChampVM> getAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "2") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Champ> recoltesDetailsPage = champService.findAll(pageable);
         return recoltesDetailsPage.map(champMapper::toVM);

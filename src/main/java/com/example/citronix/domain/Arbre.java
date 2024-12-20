@@ -1,5 +1,6 @@
 package com.example.citronix.domain;
 
+import com.example.citronix.domain.enums.Sante;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,6 +26,7 @@ public class Arbre {
     @OneToMany(mappedBy = "arbre")
     List<RecoltesDetails> recoltesDetailsList;
 
+
     public Integer getAge() {
         return Period.between(this.date_de_plantation.toLocalDate(), LocalDateTime.now().toLocalDate()).getYears();
     }
@@ -36,5 +38,7 @@ public class Arbre {
         if (age <= 20) return 20.0;
         return 0;
     }
+
+
 
 }

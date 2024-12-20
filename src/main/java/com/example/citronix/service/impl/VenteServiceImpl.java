@@ -48,7 +48,7 @@ public class VenteServiceImpl implements VenteService {
 
         Optional<Vente> venteOptional = venteRepository.findByRecolte(recolte);
         if (venteOptional.isPresent()) {
-            throw new VenteAlreadyExistException("Il existe déjà une vente pour ce recolte");
+            throw new VenteAlreadyExistException("Il existe déjà une vente pour cette recolte");
         }
     }
 
@@ -128,5 +128,20 @@ public class VenteServiceImpl implements VenteService {
         return venteDTOS;
     }
 
+//    public Vente saveVente(Vente vente) {
+////        Vente a un attribut quantite
+//        Recolte recolte = vente.getRecolte();
+//
+//        List<Vente> ventes = recolte.getVentes();
+//        double totalQuantite = ventes.stream().mapToDouble(vente1 -> vente1.getRecolte().getQuatiteTotale()).sum();
+//
+//        if (totalQuantite < recolte.getQuatiteTotale()) {
+//            venteRepository.save(vente);
+//        double new_quanityTotal = vente.getRecolte().getQuatiteTotale() _ vente.getQuantite;
+//          recolte.setQuatiteTotale(new_quanityTotal);
+//        recolteService.update(recolte);
+//        }
+//
+//    }
 
 }
