@@ -26,12 +26,16 @@
         <tag/>
         <url/>
     </scm>
+
     <properties>
         <java.version>17</java.version>
+        <sonar.host.url>http://localhost:9001</sonar.host.url>
+        <sonar.projectVersion>0.0.1-SNAPSHOT</sonar.projectVersion>
         <sonar.projectKey>citronix</sonar.projectKey>
-        <sonar.host.url>http://host.docker.internal:9000</sonar.host.url>
-        <sonar.token>sqp_19cac94acb4102fcb9e7e5c3be74101e60924067</sonar.token>
+        <sonar.login>sqa_463bacec775d21c8fe4d38ef27bc04fb4dad0fe7</sonar.login>
+        <sonar.java.binaries>target/classes</sonar.java.binaries>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -107,6 +111,33 @@
                         </exclude>
                     </excludes>
                 </configuration>
+
+            </plugin>
+            <!-- Jacoco for coverage report -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.7</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <!-- attached to Maven test phase -->
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.6.0.1398</version>
             </plugin>
         </plugins>
     </build>
